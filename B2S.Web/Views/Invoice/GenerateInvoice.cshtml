@@ -1,0 +1,181 @@
+﻿@model B2S.Core.Utilities.PaginatedList<B2S.Core.Entities.Payment>
+@using B2S.Web.Extensions
+@{
+    ViewData["Title"] = "Generate Invoices";
+    Layout = "~/Views/Shared/_B2SPagingIndex.cshtml";
+    ViewData["EntityIcon"] = "fa fa-cogs";
+    ViewData["Name"] = "Generate Invoices";
+    ViewData["IndexInfo"] = "";
+    DateTime currentFrom = ViewBag.CurrentFrom;
+    DateTime currentTo = ViewBag.CurrentTo;
+}
+
+@section SearchBox {
+    <form asp-action="GenerateInvoice" id="formSearch" method="get" class="form-horizontal" role="form">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">From</label>
+                    <div class="input-group date">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input name="currentFrom" id="currentFrom" value="@currentFrom.ToShortDateString()" class="form-control pull-right datepicker" type="text" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">To</label>
+                    <div class="input-group date">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input name="currentTo" id="currentTo" value="@currentTo.ToShortDateString()" class="form-control pull-right datepicker" type="text" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Agent</label>
+                    <select name="agentId" id="agentId" class="form-control select2" asp-items="ViewBag.AgentId">
+                        <option value="">-Select</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-top:25.4px">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="Search" />
+                </div>
+            </div>
+        </div>
+    </form>
+}
+<table class="table table-hover table-striped" id="tbl-payment" style="width:100%">
+    <thead>
+        <tr>           
+            <th>
+                @Html.DisplayName("Payee")
+            </th>
+            <th>
+                @Html.DisplayName("Price")
+            </th>
+            <th>
+                @Html.DisplayName("Quantity")
+            </th>
+            <th>
+                @Html.DisplayName("Amount")
+            </th>
+            <th>
+                @Html.DisplayName("Payment Status")
+            </th>           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Payee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @item.PaymentStatus.ToString()
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div class="box box-footer no-border ">
+    <div class="form-group">
+        <button id="btn-generate" class="btn btn-success">Generate Invoices</button>
+    </div>
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var paginationHidden = Model.TotalPages == 1 ? "hidden" : "";
+}
+
+<ul class="pagination pull-right @paginationHidden">
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-currentFrom="@ViewData["currentFrom"]"
+  asp-route-currentTo="@ViewData["currentTo"]"
+           asp-route-agentId="@ViewData["currentAgentId"]"
+           class="btn btn-default @prevDisabled">
+            Previous
+        </a>
+    </li>
+    @if (Model.TotalPages <= 11)
+    {
+        @for (var p = 1; p <= Model.TotalPages; p++)
+        {
+            var currentDisabled = Model.PageIndex == p ? "disabled" : "";
+            <li><a href="@Url.Action("Index", new { page = p, currentFrom = ViewData["currentFrom"], currentTo = ViewData["currentTo"], agentId = ViewData["currentAgentId"] })" class="btn btn-default @currentDisabled">@p</a></li>
+        }
+    }
+    else
+    {
+
+        int firstIndex = (Model.PageIndex % 10) == 0 ? (Model.PageIndex / 10 - 1) * 10 + 1 : (Model.PageIndex / 10) * 10 + 1;
+
+        for (int p = firstIndex; p <= Math.Min(firstIndex + 9, Model.TotalPages - 1); p++)
+        {
+            var currentDisabled = Model.PageIndex == p ? "disabled" : "";
+            <li><a href="@Url.Action("Index", new { page = p, currentFrom = ViewData["currentFrom"], currentTo = ViewData["currentTo"], agentId = ViewData["currentAgentId"] })" class="btn btn-default @currentDisabled">@p</a></li>
+        }
+
+        if (firstIndex + 10 < Model.TotalPages)
+        {
+            <li><span class="disabled">...</span></li>
+        }
+        <li><a href="@Url.Action("Index", new { page = Model.TotalPages, currentFrom = ViewData["currentFrom"], currentTo = ViewData["currentTo"], agentId = ViewData["currentAgentId"] })" class="btn btn-default @nextDisabled">@Model.TotalPages</a></li>
+    }
+
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex + 1)"
+             asp-route-currentFrom="@ViewData["currentFrom"]"
+            asp-route-currentTo="@ViewData["currentTo"]"
+           asp-route-agentId="@ViewData["currentAgentId"]"
+           class="btn btn-default @nextDisabled">
+            Next
+        </a>
+    </li>
+</ul>
+
+@section Scripts {
+    <script>       
+
+        $('#btn-generate').click(function () {
+            ShowMessage('Processing...')
+        let url = '/Invoice/GenerateInvoice';
+            $.ajax({
+                type: 'Post',
+                url: url,
+                data: { currentFrom: $('#currentFrom').val(), currentTo: $('#currentTo').val(), agentId: $('#agentId').val() },
+                traditional: true,
+                success: function (data) {
+                    if (data.success) {
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            });
+        })    
+     
+    </script>
+}

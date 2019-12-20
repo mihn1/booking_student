@@ -1,0 +1,147 @@
+﻿@model B2S.Web.ViewModels.Invoice.SendInvoiceViewModel
+@{
+    ViewData["Title"] = "Send Invoice";
+    ViewData["Name"] = "Invoice";
+    Layout = "~/Views/Shared/_B2S.cshtml";
+    ViewData["CreateInfo"] = "";
+    string entityIcon = ViewData["EntityIcon"] as string;
+}
+
+<form onsubmit="return submitAndSend(this)">
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                <i class="@entityIcon text-primary"></i> Send Invoice
+            </h1>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-9">
+                    <!-- Default box -->
+                    <div class="box box-primary">
+
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="InvoiceId" />
+                                    <div>
+                                        <div class="form-group">
+                                            <label asp-for="SendToEmail" class="control-label"></label>
+                                            <input asp-for="SendToEmail" id="sendToEmail" readonly class="form-control" />
+                                            <span asp-validation-for="SendToEmail" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Subject" class="control-label"></label>
+                                            <input asp-for="Subject" class="form-control" />
+                                            <span asp-validation-for="Subject" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="BodyHTML" class="control-label"></label>
+                                            <textarea asp-for="BodyHTML" id="emailBody" class="form-control ckeditor"></textarea>
+                                            <span asp-validation-for="BodyHTML" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Attached Invoice</label>
+                                            <table class="table table-hover table-striped">
+                                                <tbody id="tblAttch">
+                                                    <tr>
+                                                        <td>
+                                                            <a class="btn btn-primary btn-xs" href="@Url.Action("Generate", "Invoice", new { id = Model.InvoiceId })" target="_blank">
+                                                                <i class="fa fa-file-text-o" title="Ref: Invoice # @Model.InvoiceNumber"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <div class="form-group">
+                                <input type="submit" value="Send" class="btn btn-primary" />
+                                <a asp-action="Index" class="btn btn-default">Back to List</a>
+                            </div>
+                        </div>
+                        <!-- /.box-footer-->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                @*<div class="col-md-3">
+                        <div class="callout callout-info" style="margin-bottom: 0!important;">
+                            <h4><i class="fa fa-info"></i> Info:</h4>
+                            <p>
+                                @ViewBag.CreateInfo
+                            </p>
+                        </div>
+                    </div>*@
+            </div>
+
+        </section>
+        <!-- /.content -->
+    </div>
+</form>
+
+
+
+@section Scripts {
+    <!-- CKEDITOR -->
+    <script src="~/adminlte/components/ckeditor/ckeditor.js"></script>  
+    <script>
+        let url = '/Invoice/Send'
+        function submitAndSend(form) {
+            let formData = new FormData(form);
+            //insert email body and document to form data
+            let emailBody = CKEDITOR.instances['emailBody'].getData();
+            formData.set('BodyHTML', emailBody);
+            //insert token for verification
+            let token = $('input[name="__RequestVerificationToken"]').val();
+            formData.append('__RequestVerificationToken', token);
+
+            if (formData.get('BodyHTML') === "" || formData.get('Subject') === "") {
+                swal({
+                    title: "Are you sure want to send this message?",
+                    text: "Send this message without text in the body or subject ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#dd4b39",
+                    confirmButtonText: "Yes, send it!",
+                    closeOnConfirm: true
+                }, function () {
+                    send(formData);
+                });
+            } else {
+                send(formData);
+            }
+            return false;
+        }
+
+        function send(formData) {
+            //$("input[type=submit]").attr("disabled", true)
+            ShowMessage('Sending...');
+            $.ajax({
+                url: url,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    if (data.success) {
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        ShowMessageError(data.message);
+                        $("input[type=submit]").attr("disabled", false);
+                    }
+                }
+            });
+        }
+    </script>
+
+}

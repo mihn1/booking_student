@@ -1,0 +1,104 @@
+﻿@model B2S.Core.Entities.Invoice
+
+
+@{
+    ViewData["Title"] = "New Invoice";
+    ViewData["Name"] = "Invoice";
+    Layout = "~/Views/Shared/_B2SCreate.cshtml";
+    ViewData["EntityIcon"] = "fa fa-id-badge";
+    ViewData["CreateInfo"] = "";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="InvoiceId" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <input type="hidden" asp-for="CreatedBy" />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="AgentId" class="control-label"></label>
+                    <select asp-for="AgentId" class="form-control select2" asp-items="ViewBag.AgentId">
+                        <option value="">-Select</option>
+                    </select>
+                    <span asp-validation-for="AgentId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="InvoiceNumber" class="control-label"></label>
+                    <input asp-for="InvoiceNumber" readonly class="form-control" />
+                    <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="PaymentStatus" class="control-label"></label>
+                    <select asp-for="PaymentStatus" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.PaymentStatus>()">
+                        <option value="">-Select</option>
+                    </select>
+                    <span asp-validation-for="PaymentStatus" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="InvoiceDate" class="control-label"></label>
+                    <input asp-for="InvoiceDate" value="@DateTime.Today.ToShortDateString()" type="text" class="form-control datepicker" />
+                    <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="DueDate" class="control-label"></label>
+                    <input asp-for="DueDate" value="@DateTime.Today.ToShortDateString()" type="text" class="form-control datepicker" />
+                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="TaxAmount" class="control-label"></label>
+                    <input asp-for="TaxAmount" class="form-control" />
+                    <span asp-validation-for="TaxAmount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="DiscountAmount" class="control-label"></label>
+                    <input asp-for="DiscountAmount" class="form-control" />
+                    <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="SubTotal" class="control-label"></label>
+                    <input asp-for="SubTotal" class="form-control" />
+                    <span asp-validation-for="SubTotal" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="InvoiceAmount" class="control-label"></label>
+                    <input asp-for="InvoiceAmount" class="form-control" />
+                    <span asp-validation-for="InvoiceAmount" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

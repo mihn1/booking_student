@@ -1,0 +1,69 @@
+﻿@model B2S.Core.Entities.Property
+
+@{
+    ViewData["Title"] = "Delete Property";
+    ViewData["Name"] = "Property";
+    Layout = "~/Views/Shared/_B2SDelete.cshtml";
+    ViewData["EntityIcon"] = "fa fa-id-badge";
+    ViewData["DeleteInfo"] = "You don't have permission to delete the property.";
+    ViewData["IsCanDeleted"] = false;
+
+}
+
+
+@await Html.PartialAsync("_StatusMessage", (string)ViewBag.StatusMessage)
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PropertyName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PropertyName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PropertyType)
+        </dt>
+        <dd>
+            @Model.PropertyType.ToString()
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vendor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Vendor.VendorName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Province)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Province)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Postcode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Postcode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Country)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Country)
+        </dd>
+    </dl>
+
+</div>

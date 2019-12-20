@@ -1,0 +1,795 @@
+﻿@model IEnumerable<B2S.Core.Entities.Building>
+@using Microsoft.EntityFrameworkCore
+@inject B2S.Infrastructure.Data.AppDbContext _context;
+
+@{
+    ViewData["Title"] = "Booking";
+    Layout = "~/Views/Shared/_B2S.cshtml";
+
+    DateTime bookingFrom = ViewBag.CurrentFrom;
+    DateTime bookingTo = ViewBag.CurrentTo;
+    ViewData["sidebar"] = "sidebar-collapse";
+}
+
+@section Styles {
+    <style>
+
+        .modal-dialog {
+            width: 70% !important;
+        }
+
+        .cal-table {
+            table-layout: fixed !important;
+            width: initial !important;
+            border-top: #a7a7a7 solid 2px;
+            border-left: none;
+        }
+
+        .fixed-table {
+            z-index: 1;
+            table-layout: fixed;
+            white-space: nowrap !important;
+            width: initial !important;
+            display: table;
+            border-top: #a7a7a7 solid 2px;
+            border-left: #a7a7a7 solid 2px;
+            border-right: none;
+        }
+
+        .table-wrapper {
+            display: flex;
+        }
+
+        .header-wrapper {
+            width: initial !important;
+            max-width: 8.333333%;
+            min-width: 110px;
+            padding-right: 0px !important;
+            display: inline-block;
+        }
+
+        .cal-wrapper {
+            /*max-width: initial !important;*/
+            display: inline-block;
+            padding-left: 0px !important;
+            overflow-x: scroll;
+        }
+
+        .rbhead {
+            width: 32px !important;
+            text-align: center;
+            border-right: 1px solid #D4D4D4;
+            /*border-bottom: 1px solid #D4D4D4;*/
+            height: 97px !important;
+            padding: 4px !important;
+        }
+
+            .rbhead span {
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                font-size: 12.5px;
+                /*font-weight: 400;*/
+                margin-top: 12px;
+                color: #5b5b5b;
+            }
+
+        .blackfill {
+            /*background-color: #1A323C;*/
+            background-image: url(../images/blackfill-number.png);
+        }
+
+        .Male {
+            background-color: #9fafca;
+        }
+
+        .Female {
+            background-color: #ffaed0;
+        }
+
+        .Other {
+            background-color: #fe7c3d;
+        }
+
+        .not-booking {
+            background-color: #e5e5e5;
+        }
+
+        .fixed-col {
+            width: 32px !important;
+            height: 32px !important;
+            text-align: center;
+            border-width: 1px;
+            border-color: black;
+            padding: 6px !important;
+            font-size: 12.5px;
+        }
+
+        .dynamic-col {
+            width: 32px !important;
+            height: 32px !important;
+            text-align: center;
+            /*color: white; /* White text */
+            padding: 0px !important;
+            border-width: 1px !important;
+        }
+
+            .dynamic-col div {
+                height: 31px;
+                width: 31px;
+                display: block;
+                cursor: pointer;
+            }
+
+        .dynamic-header {
+            min-width: 32px !important;
+            height: 32px !important;
+            text-align: center;
+            table-layout: fixed;
+            border-bottom-width: 1px !important;
+            padding: 4px !important;
+            background-color: #5DBCD2;
+        }
+
+        .month-text span {
+            max-width: 22px;
+            white-space: nowrap;
+            overflow: visible;
+            color: #3a3a3a;
+            font-size: 16px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .cal-month {
+            border: none !important;
+        }
+
+        .monthtag {
+            border-left: solid 2px #ABA7A0 !important;
+        }
+
+        .colorlegend ul {
+            list-style-type: none;
+        }
+
+            .colorlegend ul li {
+                padding: 3px 0;
+                overflow: auto;
+            }
+
+                .colorlegend ul li span.maleleg {
+                    float: left;
+                    display: block;
+                    background-color: #446db3;
+                    margin-right: 5px;
+                    width: 15px;
+                    height: 15px;
+                }
+
+                .colorlegend ul li span.femaleleg {
+                    float: left;
+                    display: block;
+                    background-color: #ff529a;
+                    margin-right: 5px;
+                    width: 15px;
+                    height: 15px;
+                }
+
+                .colorlegend ul li span.ncleg {
+                    float: left;
+                    display: block;
+                    background-color: #fe7c3d;
+                    margin-right: 5px;
+                    width: 15px;
+                    height: 15px;
+                }
+
+        .typelegend ul {
+            list-style-type: none;
+        }
+
+            .typelegend ul li {
+                padding: 3px 0;
+                overflow: visible;
+            }
+
+                .typelegend ul li span.legendhd {
+                    float: left;
+                    display: block;
+                    margin-right: 5px;
+                    margin-top: 3px;
+                    width: 20px;
+                    height: 15px;
+                    line-height: 14px;
+                    text-align: center;
+                    font-size: 10px;
+                    font-weight: bold;
+                }
+
+        .confirm-success {
+            color: green;
+            text-align: center;
+            margin-top: auto;
+            margin-bottom: auto;
+            display: block !important;
+        }
+
+        .modal-content img {
+            width: 100%;
+        }
+
+
+        .image-container {
+            padding-left: 0px;
+            padding-right: 20px;
+        }
+
+            .image-container img {
+                cursor: pointer;
+                max-height: 110px !important;
+                width: 80% !important;
+            }
+
+            .image-container:first-child img {
+                float: right;
+                padding-right: 0px !important;
+            }
+
+        .form-search {
+            margin-top: 25px;
+        }
+
+        .dropdown.dropdown-lg .dropdown-menu {
+            margin-top: -1px;
+            padding: 4px 15px;
+        }
+
+        .btn-group .btn {
+            border-radius: 0;
+            margin-left: -1px;
+        }
+
+        .form-horizontal .form-group {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        @@media screen and (min-width: 568px) {
+            #boot-search-box {
+                width: 350px;
+                margin: 0 auto;
+            }
+
+            .dropdown.dropdown-lg {
+                position: static !important;
+            }
+
+                .dropdown.dropdown-lg .dropdown-menu {
+                    min-width: 350px;
+                }
+        }
+    </style>
+}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-2">
+                    @*<h1>
+                            Booking
+                        </h1>*@
+                </div>
+                <form asp-action="Index" method="get" id="formSearch" class="form-horizontal form-search" role="form">
+                    <div class="col-md-12">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                @*<label class="control-label"></label>*@
+                                <div class="input-group" id="boot-search-box" style="margin-top: 25px;">
+                                    <input type="text" class="form-control search-box-style" name="Search" id="search" value="@ViewData["CurrentSearch"]" placeholder="Search by name, address" />
+                                    <div class="input-group-btn">
+                                        <div class="btn-group" role="group">
+                                            <div class="dropdown dropdown-lg">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                                                <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                                    <div class="form-group">
+                                                        <label for="filter">Property Type</label>
+                                                        <select name="PropertyType" id="propertyType" class="form-control search-box-style" asp-items="@Html.GetEnumSelectList<B2S.Core.Enums.PropertyType>()">
+                                                            <option value="0">-Select-</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">From</label>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input name="BookingFrom" id="BookingFrom" value="@bookingFrom.ToShortDateString()" class="form-control pull-right datepicker" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">To</label>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input name="BookingTo" id="BookingTo" value="@bookingTo.ToShortDateString()" class="form-control pull-right datepicker" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2" style="margin-top:25.4px">
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-success" value="Search" />
+                            </div>
+                        </div>
+                    </div>                                    
+                </form>
+
+            </div>
+        </div>
+
+    </section>
+
+    <section class="content">
+        @if (Model.Count() == 0)
+        {
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3>No data found.</h3>
+                </div>
+            </div>
+        }
+        @foreach (var building in Model)
+        {
+            var roomTypes = await _context.RoomType.Where(r => r.PropertyId == building.PropertyId).OrderBy(r => r.RoomTypeName).ToListAsync();
+            var rooms = await _context.Room.Include(r => r.RoomType).Where(r => r.BuildingId == building.BuildingId).OrderBy(r => r.RoomName.Length).ThenBy(b => b.RoomName).ToListAsync();
+            var images = await _context.BuildingImage.Where(i => i.BuildingId == building.BuildingId && i.IsDefault).Take(2).ToListAsync();
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            @*<div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                </div>*@
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="box-title" style="font-weight: 600;">@building.Property.PropertyName | @building.Name</div>
+                                    <span class="row">@building.Property.Address @building.Property.City  @building.Property.Province  @building.Property.Postcode</span>
+                                    <span name="pctBedBooked"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="colorlegend">
+                                                <ul>
+                                                    <li><span class="maleleg"></span><span class="floatLeft">Male</span></li>
+                                                    <li><span class="femaleleg"></span><span class="floatLeft">Female</span></li>
+                                                    <li><i class="fa fa-check" style="color: green;"></i><span class="floatLeft"> Confirmed</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="typelegend">
+                                                <ul>
+                                                    @foreach (var rp in roomTypes)
+                                                    {
+                                                        <li><span class="legendhd blackfill">@rp.RoomTypeValue</span><span class="floatLeft">@rp.RoomTypeName</span></li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        @foreach (var i in images)
+                                        {
+                                            <div class="col-md-6 image-container">
+                                                <img src="@Url.Action("GetImage", "BuildingImage", new { id = i.ImageId})" onclick="ShowImg('@i.ImageId')" style="width: 100%" />
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="row table-wrapper">
+                                <div class="header-wrapper col-lg-1">
+                                    <table class="table table-striped table-bordered fixed-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="blackfill rbhead" rowspan="3">
+                                                    <span>ROOM No.</span>
+                                                </th>
+                                                <th class="blackfill rbhead" rowspan="3">
+                                                    <span>BED No.</span>
+                                                </th>
+                                                <th class="blackfill rbhead" rowspan="3" style="border-right:0px;">
+                                                    <span>ROOM TYPE</span>
+                                                </th>
+
+                                            </tr>
+                                            <tr class="header-booking"></tr>
+                                            <tr class="header-booking"></tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var room in rooms)
+                                            {
+                                                var beds = await _context.Bed.Where(b => b.RoomId == room.RoomId).OrderBy(b => b.Name.Length).ThenBy(b => b.Name).ToListAsync();
+                                                foreach (var bed in beds)
+                                                {
+                                                    <tr id="@bed.BedId">
+                                                        <td class="fixed-col">@room.RoomName</td>
+                                                        <td class="fixed-col">@bed.Name</td>
+                                                        <td class="fixed-col">@room.RoomType?.RoomTypeValue</td>
+
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="cal-wrapper col-lg-11">
+                                    <table class="table table-striped table-bordered cal-table" name="tblBooking">
+                                        <thead>
+                                            <tr class="header-booking" name="header-row"></tr>
+                                            <tr class="header-booking" name="header-row"></tr>
+                                            <tr class="header-booking" name="header-row"></tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var room in rooms)
+                                            {
+                                                var beds = await _context.Bed.Where(b => b.RoomId == room.RoomId).OrderBy(b => b.Name.Length).ThenBy(b => b.Name).ToListAsync();
+                                                foreach (var bed in beds)
+                                                {
+                                                    <tr name="BedRow" id="@bed.BedId"></tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- /.row -->
+                        </div>
+                        <!-- ./box-body -->
+                        <div class="box-footer">
+
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+        }
+    </section>
+</div>
+<!--modal placeholder-->
+<div class="modal modal-primary fade" id="modalDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var totalDays;
+        $(document).ready(function () {
+            $("select[name=PropertyType]").val('@ViewData["CurrentPropertyType"]').change();
+
+            $(".dynamic-col div").tooltip();
+            $("body").removeClass("sidebar-mini");
+            //calculate total days and percent bed booked per table
+            let startDate = $("#BookingFrom").val();
+            let endDate = $("#BookingTo").val();
+            let partStrDate = startDate.split('/');
+            let partEndDate = endDate.split('/');
+            let strDateJS = new Date(partStrDate[2], partStrDate[0] - 1, partStrDate[1]);
+            let endDateJS = new Date(partEndDate[2], partEndDate[0] - 1, partEndDate[1]);
+            totalDays = Math.floor((endDateJS.getTime() - strDateJS.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+            popCal();
+        });
+
+
+        $("#formSearch").submit(function (e) {
+            let propertyType = $('#propertyType').val(); 
+            let search = $('#search').val();
+            //check if start date is less than end date
+            let startDate = $("#BookingFrom").val();
+            let endDate = $("#BookingTo").val();
+            let partStrDate = startDate.split('/');
+            let partEndDate = endDate.split('/');
+            let strDateJS = new Date(partStrDate[2], partStrDate[0] - 1, partStrDate[1]);
+            let endDateJS = new Date(partEndDate[2], partEndDate[0] - 1, partEndDate[1]);
+            if (endDateJS < strDateJS) {
+                e.preventDefault()
+                ShowMessageError("Start date must be less than end date");
+            } else if (propertyType === '@ViewData["CurrentPropertyType"]' && search.trim() === '@ViewData["CurrentSearch"]') {
+                e.preventDefault()
+                totalDays = Math.floor((endDateJS.getTime() - strDateJS.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+                popCal();
+            }
+          
+        })
+
+        function ShowPopup(url) {
+            var modalId = 'modalDefault';
+            var modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+            $.get(url, function (response) {
+                // validate owner of the booking
+                if (response.trim().length !== 0) {
+                    modalPlaceholder.html(response);
+                    popup = $('#' + modalId + '').modal({
+                        keyboard: false,
+                        backdrop: 'static'
+                    });
+                } else {
+                    ShowMessageError("Sorry, you cannot view information as this is not your booking.");
+                }
+
+            })
+        }
+
+
+        function SubmitAddEdit(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                let type = $(form).find("#bookingType").val();
+                //need this because of auto generated hidden input for checkbox in asp.net core
+                var checkedboxes = $(form).find("input[type='checkbox']:checked");
+                checkedboxes.each(function () {
+                    let name = $(this).attr("name");
+                    $("input[type='hidden'][name='" + name + "']").val('true');
+                })
+                //check if booking is on moving or creating
+                if (type === 'Move') {
+                    return SubmitMoving(form);
+                }
+
+                var replacer = function (key, value) { if (value === undefined || value === '') { return null; } return value; };
+                var data = $(form).serializeJSON();
+                data.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+                data = JSON.stringify(data, replacer);
+                $.ajax({
+                    type: 'POST',
+                    url: '/Booking/Create',
+                    data: data,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.success) {
+                            popup.modal('hide');
+                            ShowMessage(data.message);
+                            popCalWithoutHeader();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+
+        function SubmitPayment(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                //need this because of auto generated hidden input for checkbox in asp.net core
+                var checkedboxes = $(form).find("input[type='checkbox']:checked");
+                checkedboxes.each(function () {
+                    let name = $(this).attr("name");
+                    $("input[type='hidden'][name='" + name + "']").val('true');
+                })
+
+                var replacer = function (key, value) { if (value === undefined || value === '') { return null; } return value; };
+                var data = $(form).serializeJSON();
+                data.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+                data = JSON.stringify(data, replacer);
+                $.ajax({
+                    type: 'POST',
+                    url: '/Booking/PaymentWithPayPal',
+                    data: data,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.success) {
+                            popup.modal('hide');
+                            ShowMessage('Payment is on processing...');
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+
+        function SubmitMoving(form) {
+            var replacer = function (key, value) { if (value === undefined || value === '') { return null; } return value; };
+            var data = $(form).serializeJSON();
+            data = JSON.stringify(data, replacer);
+            $.ajax({
+                type: 'POST',
+                url: '/Booking/Move',
+                data: data,
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data.success) {
+                        popup.modal('hide');
+                        ShowMessage(data.message);
+                        popCalWithoutHeader();
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            });
+
+            return false;
+        }
+
+        function popCal() {
+            $(".dynamic-col").remove();
+            $(".dynamic-header").remove();
+            let bookingFrom = $("#BookingFrom").val();
+            let bookingTo = $("#BookingTo").val();
+            let url = "/Booking/GetBedBookingRow";
+            //populate header rows
+            let headers = $("tr[name=header-row]");
+            $.each(headers, function (index, item) {
+                let bedBookingVM = { BookingFrom: bookingFrom, BookingTo: bookingTo, IsHeader: true, HeaderType: index % 3 + 1 };
+                $.get(url, bedBookingVM, function (data) {
+                    $(item).append(data);
+                })
+            })
+            //populate bed rows
+            let beds = $("tr[name=BedRow]");
+            $.each(beds, function (index, item) {
+                let bedBookingVM = { BookingFrom: bookingFrom, BookingTo: bookingTo, BedId: $(item).attr("id"), IsHeader: false };
+                $.get(url, bedBookingVM, function (data) {
+                    $(item).append(data);
+                })
+            })
+
+            calculatePctBed(totalDays)
+        }
+
+        function popCalWithoutHeader() {
+            $(".dynamic-col").remove();
+            let bookingFrom = $("#BookingFrom").val();
+            let bookingTo = $("#BookingTo").val();
+            let url = "/Booking/GetBedBookingRow";
+            //populate bed rows
+            let beds = $("tr[name=BedRow]");
+            $.each(beds, function (index, item) {
+                let bedBookingVM = { BookingFrom: bookingFrom, BookingTo: bookingTo, BedId: $(item).attr("id"), IsHeader: false };
+                $.get(url, bedBookingVM, function (data) {
+                    $(item).append(data);
+                })
+            })
+            calculatePctBed(totalDays)
+        }
+
+        function calculatePctBed(totalDays) {
+            let tables = $("table[name=tblBooking]");
+            $.each(tables, function (index, item) {
+                setTimeout(function () {
+                    reCalculateBed(item, totalDays)
+                }, 3000)
+            })
+        }
+
+        function reCalculateBed(table, totalDays) {
+            setTimeout(function () {
+                let rooms = $(table).find("tr[name=BedRow]");
+                let beds = rooms.find("td.dynamic-col");
+                if (beds.length < rooms.length * totalDays) {
+                    reCalculateBed(table, totalDays);
+                } else {
+                    let emptyBeds = $(rooms).find("td div.not-booking");
+                    let pct = 100 - emptyBeds.length / beds.length * 100.0;
+                    $(table).closest(".box").find("span[name=pctBedBooked]").text(pct.toFixed(0) + "% beds booked");
+                }
+            }, 1000)
+        }
+
+        function ShowImg(id) {
+            let url = '/BuildingImage/ImageBox/';
+            let modalId = 'modalDefault';
+            let modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+            $.get(url, { curImgId: id, move: '' }, function (res) {
+                modalPlaceholder.html(res);
+                popup = $('#' + modalId + '').modal({
+                    //keyboard: false,
+                    //backdrop: 'static'
+                });
+            })
+        }
+
+
+
+        function ConfirmBooking(btn) {
+            ShowMessage('Processing...')
+            let id = $(btn).closest("form").find('input[name=BookingId]').val();
+            let url = '/Booking/Confirm/' + id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        popup.modal('hide');
+                        ShowMessage(data.message);
+                        popCalWithoutHeader();
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            });
+        }
+
+
+        function DeleteBooking(btn) {
+            let id = $(btn).closest("form").find('input[name=BookingId]').val();
+            swal({
+                title: "Are you sure want to Remove this BOOKING?",
+                text: "You will not be able to restore the Data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function () {
+                let url = '/Booking/Delete/' + id;
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            popup.modal('hide');
+                            ShowMessage(data.message);
+                            popCalWithoutHeader();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        function MoveBooking(btn) {
+            let bookingContainer = $("#bookingContainer");
+            let bookingContent = bookingContainer.html();
+            let id = $(btn).closest("form").find('input[name=BookingId]').val();
+            let url = '/Booking/Move/' + id;
+            $.get(url, function (response) {
+                $("button[name=FixBtn]").remove();
+                bookingContainer.html(response);
+            })
+        }
+
+
+        $('select').on('click', function (e) {
+            e.stopPropagation();
+        });
+    </script>
+
+
+
+}
+

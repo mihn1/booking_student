@@ -1,0 +1,40 @@
+﻿@model B2S.Core.Entities.UserProfile
+
+@{
+    ViewData["Title"] = "Edit User Profile";
+    ViewData["Name"] = "User Profile";
+    Layout = "~/Views/Shared/_B2SEdit.cshtml";
+    ViewData["EntityIcon"] = "fa fa-user-plus";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="UserProfileId" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <input type="hidden" asp-for="CreatedBy" />
+        <div class="form-group">
+            <label asp-for="UserProfileName" class="control-label"></label>
+            <input asp-for="UserProfileName" class="form-control" />
+            <span asp-validation-for="UserProfileName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+

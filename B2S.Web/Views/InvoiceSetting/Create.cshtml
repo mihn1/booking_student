@@ -1,0 +1,346 @@
+﻿@model B2S.Core.Entities.InvoiceSetting
+
+
+@{
+    ViewData["Title"] = "New Invoice Setting";
+    ViewData["Name"] = "Invoice Setting";
+    Layout = "~/Views/Shared/_B2SCreate.cshtml";
+    ViewData["EntityIcon"] = "fa fa-wpforms";
+    ViewData["CreateInfo"] = "";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="InvoiceSettingId" />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label style="margin-top: 15px;">
+                            <input asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="box-header with-border">
+            <h3 class="box-title">Business Information</h3>
+        </div>
+        <div class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="BusinessNumber" class="control-label"></label>
+                            <input asp-for="BusinessNumber" class="form-control" />
+                            <span asp-validation-for="BusinessNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="ContactName" class="control-label"></label>
+                            <input asp-for="ContactName" class="form-control" />
+                            <span asp-validation-for="ContactName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Phone" class="control-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label asp-for="Address" class="control-label"></label>
+                        <textarea asp-for="Address" class="form-control"></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="City" class="control-label"></label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Province" class="control-label"></label>
+                            <input asp-for="Province" class="form-control" />
+                            <span asp-validation-for="Province" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Postcode" class="control-label"></label>
+                            <input asp-for="Postcode" class="form-control" />
+                            <span asp-validation-for="Postcode" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Country" class="control-label"></label>
+                            <select asp-for="Country" class="form-control" asp-items="new SelectList(B2S.Core.Utilities.CommonHelper.CountryList())">
+                                <option value="">-Select-</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-header with-border">
+            <h3 class="box-title">Payment Settings</h3>
+        </div>
+        <div class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="PaymentTerm" class="control-label"></label>
+                            <input asp-for="PaymentTerm" class="form-control" />
+                            <span asp-validation-for="PaymentTerm" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Currency" class="control-label"></label>
+                            <input asp-for="Currency" class="form-control" />
+                            <span asp-validation-for="Currency" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="PaymentMethod" class="control-label"></label>
+                            <select asp-for="PaymentMethod" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.PaymentMethod>()">
+                                <option value="">-Select</option>
+                            </select>
+                            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="PaymentNote" class="control-label"></label>
+                            <input asp-for="PaymentNote" class="form-control" />
+                            <span asp-validation-for="PaymentNote" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="RecurringPeriod" class="control-label"></label>
+                            <input asp-for="RecurringPeriod" class="form-control" />
+                            <span asp-validation-for="RecurringPeriod" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="RecurringType" class="control-label"></label>
+                            <select asp-for="RecurringType" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.RecurringInvoiceType>()">
+                                <option value="">-Select</option>
+                            </select>
+                            <span asp-validation-for="RecurringType" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="AutoSend" /> @Html.DisplayNameFor(model => model.AutoSend)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-header with-border">
+            <h3 class="box-title">Banking Information</h3>
+        </div>
+        <div class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="BankName" class="control-label"></label>
+                            <input asp-for="BankName" class="form-control" />
+                            <span asp-validation-for="BankName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="AccountName" class="control-label"></label>
+                            <input asp-for="AccountName" class="form-control" />
+                            <span asp-validation-for="AccountName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="BSBNumber" class="control-label"></label>
+                            <input asp-for="BSBNumber" class="form-control" />
+                            <span asp-validation-for="BSBNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="AccountNumber" class="control-label"></label>
+                            <input asp-for="AccountNumber" class="form-control" />
+                            <span asp-validation-for="AccountNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-header with-border">
+            <h3 class="box-title">Tax Settings</h3>
+        </div>
+        <div class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TaxCode" class="control-label"></label>
+                            <input asp-for="TaxCode" class="form-control" />
+                            <span asp-validation-for="TaxCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TaxPercentage" class="control-label"></label>
+                            <input asp-for="TaxPercentage" class="form-control" />
+                            <span asp-validation-for="TaxPercentage" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="box-header with-border">
+            <h3 class="box-title">Email Settings</h3>
+        </div>
+        <div class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="EmailTemplateId" class="control-label"></label>
+                            <select asp-for="EmailTemplateId" id="templateId" class="form-control" asp-items="ViewBag.EmailTemplateId">
+                                <option value="">-Select</option>
+                            </select>
+                            <span asp-validation-for="EmailTemplateId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">Email Body</label>
+                            <textarea id="body" name="ckeditor" class="form-control ckeditor"></textarea>
+                            <span asp-validation-for="EmailTemplate.BodyHTML" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        <div class="box-header with-border">
+            <h3 class="box-title">Email & Auto Number Settings</h3>
+        </div>
+        <div class="box box-primary">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="PrefixInvoiceNo" class="control-label"></label>
+                            <input asp-for="PrefixInvoiceNo" class="form-control" />
+                            <span asp-validation-for="PrefixInvoiceNo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="CurrentInvoiceNo" class="control-label"></label>
+                            <input asp-for="CurrentInvoiceNo" class="form-control" />
+                            <span asp-validation-for="CurrentInvoiceNo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="EmailTemplateId" class="control-label"></label>
+                            <select asp-for="EmailTemplateId" id="templateId" class="form-control" asp-items="ViewBag.EmailTemplateId">
+                                <option value="">-Select</option>
+                            </select>
+                            <span asp-validation-for="EmailTemplateId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <!-- CKEDITOR -->
+    <script src="~/adminlte/components/ckeditor/ckeditor.js"></script>
+    <script>
+        $("#templateId").ready(function () {
+            let emailTemplateId = $(this).val();
+            let url = "/InvoiceSetting/GetEmailTemplate";
+            $.getJSON(url, { emailTemplateId: emailTemplateId }, function (data) {
+                if (data != null) {
+                    CKEDITOR.instances['body'].setData(data);
+                } else {
+                    CKEDITOR.instances['body'].setData('');
+                }
+            });
+        })
+            .change(function () {
+                let emailTemplateId = $(this).val();
+                let url = "/InvoiceSetting/GetEmailTemplate";
+                $.getJSON(url, { emailTemplateId: emailTemplateId }, function (data) {
+                    if (data != null) {
+                        CKEDITOR.instances['body'].setData(data);
+                    } else {
+                        CKEDITOR.instances['body'].setData('');
+                    }
+                });
+            })
+    </script>
+}

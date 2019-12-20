@@ -1,0 +1,520 @@
+﻿@model B2S.Core.Entities.Property
+
+
+@{
+    ViewData["Title"] = "New Property";
+    ViewData["Name"] = "Property";
+    bool isPopup = ViewBag.IsPopup;
+    if (isPopup)
+    {
+        Layout = "~/Views/Shared/_B2SPopup.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_B2S.cshtml";
+    }
+    ViewData["EntityIcon"] = "fa fa-id-badge";
+    ViewData["CreateInfo"] = "";
+    string submitType = string.IsNullOrEmpty(Model.PropertyId) ? "Submit" : "Next";
+}
+
+@if (!isPopup)
+{
+    @section Styles {
+        <link href="~/css/PropertyWizard.css" rel="stylesheet" />
+    }
+    <div class="content-wrapper">
+        <section class="content-header"></section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="wizard-steps">
+                        <div class="step active">
+                            <span class="badge">1</span> <b>Property</b>
+                        </div>
+                        <div class="step">
+                            <span class="badge">2</span>  Buildings
+                        </div>
+                        <div class="step">
+                            <span class="badge">3</span>  Rooms / Beds
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div class="col-md-9">
+                        <!-- Default box -->
+                        <div class="box box-primary">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <input type="hidden" asp-for="PropertyId" />
+                                        <input type="hidden" asp-for="CreatedAt" />
+                                        <input type="hidden" asp-for="CreatedBy" />
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label asp-for="PropertyName" class="control-label"></label>
+                                                    <input asp-for="PropertyName" class="form-control" />
+                                                    <span asp-validation-for="PropertyName" class="text-danger"></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label asp-for="PropertyType" class="control-label"></label>
+                                                    <select asp-for="PropertyType" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.PropertyType>()">
+                                                        <option value="">-Select-</option>
+                                                    </select>
+                                                    <span asp-validation-for="PropertyType" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label asp-for="VendorId" class="control-label"></label>
+                                                    <select asp-for="VendorId" class="form-control select2" asp-items="ViewBag.VendorId">
+                                                        <option value="">-Select-</option>
+                                                    </select>
+                                                    <span asp-validation-for="VendorId" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label asp-for="Address" class="control-label"></label>
+                                                <textarea asp-for="Address" class="form-control"></textarea>
+                                                <span asp-validation-for="Address" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label asp-for="City" class="control-label"></label>
+                                                    <input asp-for="City" class="form-control" />
+                                                    <span asp-validation-for="City" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label asp-for="Province" class="control-label"></label>
+                                                    <input asp-for="Province" class="form-control" />
+                                                    <span asp-validation-for="Province" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label asp-for="Postcode" class="control-label"></label>
+                                                    <input asp-for="Postcode" class="form-control" />
+                                                    <span asp-validation-for="Postcode" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label asp-for="Country" class="control-label"></label>
+                                                    <select asp-for="Country" class="form-control" asp-items="new SelectList(B2S.Core.Utilities.CommonHelper.CountryList())">
+                                                        <option value="">-Select-</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.PropertyId))
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- Default box -->
+                                            <div class="box box-success">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">Room Types</h3>
+                                                    <div class="box-tools pull-right">
+                                                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <table id="grid-roomtype" name="grid-roomtype" class="table table-striped table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="col-md-3">Name</th>
+                                                                        <th class="col-md-1">Value</th>
+                                                                        <th class="col-md-2">Price</th>
+                                                                        <th class="col-md-3">Discount Amount</th>
+                                                                        <th class="col-md-2">Deposit Amount</th>
+                                                                        <th class="col-lg-1"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /.box-body -->
+                                                <div class="box-footer">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <a class="btn btn-success" style="margin-bottom:10px" onclick="ShowPopup('@Url.Action("CreateRoomType","Property", new { propertyId = Model.PropertyId })')"><i class="fa fa-plus"></i> Add Room Type</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /.box-footer-->
+                                            </div>
+                                            <!-- /.box -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- Default box -->
+                                            <div class="box box-success">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">Documents</h3>
+                                                    <div class="box-tools pull-right">
+                                                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <table id="grid-document" name="grid4" class="table table-striped table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="col-md-10">Document Name</th>
+                                                                        <th class="col-md-2"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /.box-body -->
+                                                <div class="box-footer">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <a class="btn btn-success" style="margin-bottom:10px" onclick="ShowPopup('@Url.Action("CreateDocument","Property", new { propertyId = Model.PropertyId })')"><i class="fa fa-plus"></i> Upload Document</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /.box-footer-->
+                                            </div>
+                                            <!-- /.box -->
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                        <!-- /.box -->
+                        <div class="row">
+                            <div class="col-sm-3 col-sm-offset-5">                             
+                                <input type="submit" value="@submitType" class="btn btn-primary" />
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+
+                @*<div class="col-md-3">
+                    <div class="callout callout-info" style="margin-bottom: 0!important;">
+                        <h4><i class="fa fa-info"></i> Info:</h4>
+                        <p>
+                            @ViewBag.CreateInfo
+                        </p>
+                    </div>
+                </div>*@
+            </div>
+
+        </section>
+
+    </div>
+
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PropertyId" />
+            <input type="hidden" asp-for="VendorId" />
+            <input type="hidden" asp-for="CreatedBy" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="PropertyName" class="control-label"></label>
+                        <input asp-for="PropertyName" class="form-control" />
+                        <span asp-validation-for="PropertyName" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="PropertyType" class="control-label"></label>
+                        <select asp-for="PropertyType" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.PropertyType>()">
+                            <option value="">-Select-</option>
+                        </select>
+                        <span asp-validation-for="PropertyType" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label asp-for="Address" class="control-label"></label>
+                    <textarea asp-for="Address" class="form-control"></textarea>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Province" class="control-label"></label>
+                        <input asp-for="Province" class="form-control" />
+                        <span asp-validation-for="Province" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Postcode" class="control-label"></label>
+                        <input asp-for="Postcode" class="form-control" />
+                        <span asp-validation-for="Postcode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Country" class="control-label"></label>
+                        <select asp-for="Country" class="form-control" asp-items="new SelectList(B2S.Core.Utilities.CommonHelper.CountryList())">
+                            <option value="">-Select-</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!--modal placeholder-->
+<div class="modal modal-primary fade" id="modalDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var popup, dataTable, dataTableDoc
+        var entity_RT = 'RoomType';
+        var entity_PD = 'PropertyDocument'
+        var apiurl_RT = '/api/' + entity_RT;
+        var apiurl_PD = '/api/' + entity_PD;
+
+        $(document).ready(function () {
+            dataTable = $('#grid-roomtype').DataTable({
+                "ajax": {
+                    "url": apiurl_RT + '?propertyId=@Model.PropertyId',
+                    "type": 'GET',
+                    "datatype": 'json'
+                },
+                "columns": [
+                    { "data": "roomTypeName" },
+                    { "data": "roomTypeValue" },
+                    { "data": "price"},
+                    { "data": "discountAmount" },
+                    { "data": "depositAmount" },
+                    {
+                        "data": "roomTypeId",
+                        "render": function (data) {
+                            var btnEdit = "<a class='btn btn-primary btn-xs' onclick=ShowPopup('/Property/CreateRoomType/" + data + "')><i class='fa fa-pencil'></i></a>";
+                            var btnDelete = "<a class='btn btn-danger btn-xs' style='margin-left:2px' onclick=Delete('/api/" + entity_RT + "/" + data + "')><i class='fa fa-trash'></i></a>";
+                            return "<div class='tools pull-right'>" + btnEdit + btnDelete + "</div>";
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No data found."
+                },
+                "lengthChange": false,
+                "info": false,
+                "searching": false,
+                "paging": false,
+                "columnDefs": [{
+                    "targets": 5,
+                    "orderable": false
+                }]
+            });
+
+            dataTableDoc = $('#grid-document').DataTable({
+                "ajax": {
+                    "url": apiurl_PD + '?propertyId=@Model.PropertyId',
+                    "type": 'GET',
+                    "datatype": 'json'
+                },
+                "columns": [
+                    { "data": "documentName" },
+                    {
+                        "data": "documentId",
+                        "render": function (data) {
+                            var btnView = "<a class='btn btn-primary btn-xs' target='_blank' href='/Property/GetViewDocument/" + data + "'><i class='fa fa-file-text-o'></i></a>";
+                            var btnDownload = "<a class='btn btn-primary btn-xs' style='margin-left:2px' href='/Property/DownloadDocument/" + data + "'><i class='fa fa-download'></i></a>";
+                            var btnDelete = "<a class='btn btn-danger btn-xs' style='margin-left:2px' onclick=Delete('/api/" + apiurl_PD + "/" + data + "')><i class='fa fa-trash'></i></a>";
+                            return btnView + btnDownload + btnDelete;
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No data found."
+                },
+                "lengthChange": false,
+                "info": false,
+                "searching": false,
+                "paging": false,
+                "ordering": false,
+                "columnDefs": [{
+                    "targets": 1,
+                    "orderable": false
+                }]
+            });
+
+        })
+
+         function ShowPopup(url) {
+            var modalId = 'modalDefault';
+            var modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+            $.get(url)
+                .done(function (response) {
+                    modalPlaceholder.html(response);
+                    popup = $('#' + modalId + '').modal({
+                        keyboard: false,
+                        backdrop: 'static'
+                    });
+                });
+        }
+
+        function SubmitItem(btn) {
+            $(btn).closest('form').submit()
+            return false;
+        }
+
+        function SubmitAddEdit(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                //need this because of auto generated hidden input for checkbox in asp.net core
+                var checkedboxes = $(form).find("input[type='checkbox']:checked");
+                checkedboxes.each(function () {
+                    let name = $(this).attr("name");
+                    $("input[type='hidden'][name='" + name + "']").val('true');
+                })
+                var replacer = function (key, value) { if (value === undefined || value === '') { return null; } return value; };
+                var data = $(form).serializeJSON();
+                data = JSON.stringify(data, replacer);
+                $.ajax({
+                    type: 'POST',
+                    url: apiurl_RT,
+                    data: data,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.success) {
+                            popup.modal('hide');
+                            ShowMessage(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+
+
+        function SubmitDocument(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                //need this because of auto generated hidden input for checkbox in asp.net core
+                var checkedboxes = $(form).find("input[type='checkbox']:checked");
+                checkedboxes.each(function () {
+                    let name = $(this).attr("name");
+                    $("input[type='hidden'][name='" + name + "']").val('true');
+                })
+                var formData = new FormData(form);
+                $.ajax({
+                    url: apiurl_PD,
+                    type: 'POST',
+                    enctype: 'multipart/form-data',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    success: function (data) {
+                        if (data.success) {
+                            popup.modal('hide');
+                            ShowMessage(data.message);
+                            dataTableDoc.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+      
+        function Delete(url) {
+            swal({
+                title: "Are you sure want to Delete?",
+                text: "You will not be able to restore the data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            ShowMessage(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+    </script>
+
+}

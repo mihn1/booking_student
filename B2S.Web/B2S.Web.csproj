@@ -1,0 +1,114 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\0ab8abc0fed2841fc21e545dead228d38843c7ea\main.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\0ab8abc0fed2841fc21e545dead228d38843c7ea\responsive.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\11c5c9630c8fb379c36d1e3d5cedae3242345ede\style.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\21880c0ffe15753a53f8402e9f64e1077e071510\style.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\295814f8b5a7bf1155c985077fb6695cba261b19\style.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\2af427b2894d1e78c5806e231aa35d00838a84e0\style.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\3826efd3d5832f13b2387c34dc4352f19ce0f650\style.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\3a8fa2a6e77ec7142978a883fd249dc4404b1860\extend.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\3a8fa2a6e77ec7142978a883fd249dc4404b1860\fonts.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\3a8fa2a6e77ec7142978a883fd249dc4404b1860\global.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\3a8fa2a6e77ec7142978a883fd249dc4404b1860\minxi.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\3a8fa2a6e77ec7142978a883fd249dc4404b1860\variables.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\52172103e4920685e9c8bc3a27ff8b5a118aea7f\extend.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\52172103e4920685e9c8bc3a27ff8b5a118aea7f\fonts.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\52172103e4920685e9c8bc3a27ff8b5a118aea7f\global.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\52172103e4920685e9c8bc3a27ff8b5a118aea7f\minxi.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\52172103e4920685e9c8bc3a27ff8b5a118aea7f\variables.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\5947b2fd6fea889b366315e45d8aae9649d4a553\style.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\632f5d1dd893d2e8764de51b8ca4120e25043113\extend.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\632f5d1dd893d2e8764de51b8ca4120e25043113\fonts.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\632f5d1dd893d2e8764de51b8ca4120e25043113\global.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\632f5d1dd893d2e8764de51b8ca4120e25043113\minxi.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\632f5d1dd893d2e8764de51b8ca4120e25043113\variables.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\643489b018602f15119d8f44aeb7fc79468873a9\main.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\643489b018602f15119d8f44aeb7fc79468873a9\responsive.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\6779215234a6f189344269357ac71d006fa27bc2\main.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\6779215234a6f189344269357ac71d006fa27bc2\responsive.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\7643c8aa2e335ff5e104bc47d8dd7f1a0693bb39\extend.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\7643c8aa2e335ff5e104bc47d8dd7f1a0693bb39\fonts.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\7643c8aa2e335ff5e104bc47d8dd7f1a0693bb39\global.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\7643c8aa2e335ff5e104bc47d8dd7f1a0693bb39\minxi.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\7643c8aa2e335ff5e104bc47d8dd7f1a0693bb39\variables.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\874df1a5c126532a01abbad5396020f64e9d87c1\extend.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\874df1a5c126532a01abbad5396020f64e9d87c1\fonts.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\874df1a5c126532a01abbad5396020f64e9d87c1\global.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\874df1a5c126532a01abbad5396020f64e9d87c1\minxi.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\874df1a5c126532a01abbad5396020f64e9d87c1\variables.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\8bd6255781d4496c2a92589f8676e579942555b8\style.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\9618751b08223fcf3aa454f875563042fa3f61bc\extend.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\9618751b08223fcf3aa454f875563042fa3f61bc\fonts.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\9618751b08223fcf3aa454f875563042fa3f61bc\global.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\9618751b08223fcf3aa454f875563042fa3f61bc\minxi.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\9618751b08223fcf3aa454f875563042fa3f61bc\variables.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\a5fa5fcff3be0231dcf2135f3b4d08fac10773e6\main.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\a5fa5fcff3be0231dcf2135f3b4d08fac10773e6\responsive.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\b5ec1c582439724031316ff1eb0959cf1f72e565\main.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\b5ec1c582439724031316ff1eb0959cf1f72e565\responsive.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\bfed1210a7381ef4d98161edc4835d313894c7ef\extend.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\bfed1210a7381ef4d98161edc4835d313894c7ef\fonts.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\bfed1210a7381ef4d98161edc4835d313894c7ef\global.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\bfed1210a7381ef4d98161edc4835d313894c7ef\minxi.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\bfed1210a7381ef4d98161edc4835d313894c7ef\variables.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\c2bddcc4b2ca9ef100b24cdaeee49c7fcef016fe\main.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\c2bddcc4b2ca9ef100b24cdaeee49c7fcef016fe\responsive.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\cd5bb7a087549e7c3bea6e59da88a083c6191299\main.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\cd5bb7a087549e7c3bea6e59da88a083c6191299\responsive.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\e36cc9f3e18cb256035710746e3bec994a69527d\extend.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\e36cc9f3e18cb256035710746e3bec994a69527d\fonts.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\e36cc9f3e18cb256035710746e3bec994a69527d\global.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\e36cc9f3e18cb256035710746e3bec994a69527d\minxi.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\e36cc9f3e18cb256035710746e3bec994a69527d\variables.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\eca07befc467b69040c29d862f932e44849bf9df\style.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\f49285f1317a1cafa93ab4f5de346f92bbc40d58\main.scssc" />
+    <None Include="wwwroot\adminlte\components\colorlib-wizard-20\.sass-cache\f49285f1317a1cafa93ab4f5de346f92bbc40d58\responsive.scssc" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="PayPal.SDK.NETCore" Version="1.9.1.2" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\B2S.Core\B2S.Core.csproj" />
+    <ProjectReference Include="..\B2S.Infrastructure\B2S.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="wwwroot\adminlte\components\colorlib-wizard-20\images\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="Views\Booking\_BedBookingRow.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\User\Index.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\images\business-logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,276 @@
+﻿@model B2S.Core.Utilities.PaginatedList<B2S.Core.Entities.Booking>
+@using B2S.Web.Extensions
+@{
+    ViewData["Title"] = "Payment List";
+    Layout = "~/Views/Shared/_B2SPagingIndex.cshtml";
+    ViewData["EntityIcon"] = "fa fa-product-hunt";
+    ViewData["Name"] = "Payments";
+    ViewData["IndexInfo"] = "";
+    DateTime curFrom = ViewBag.CurrentFrom ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+    DateTime curTo = ViewBag.CurrentTo ?? new DateTime(curFrom.Year, curFrom.Month, DateTime.DaysInMonth(curFrom.Year, curFrom.Month));
+    string curSearch = ViewData["CurrentSearch"] as string;
+}
+
+@section SearchBox {
+    <form asp-action="Index" id="formSearch" method="get" class="form-horizontal" role="form">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="input-group pull-right" id="boot-search-box">
+                    <label class="control-label">Search</label>
+                    <input type="text" class="form-control search-box-style" name="Search" value="@curSearch" placeholder="Search by name, ID number, phone, email" />
+                    @*<div class="input-group-btn">
+                        <div class="btn-group" role="group">
+                            <div class="dropdown dropdown-lg">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                                <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                    <div class="form-group">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                            </div>
+                        </div>*@
+                </div>
+
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">From</label>
+                    <div class="input-group date">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input name="currentFrom" id="currentFrom" value="@curFrom.ToShortDateString()" class="form-control pull-right datepicker" type="text" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">To</label>
+                    <div class="input-group date">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input name="currentTo" id="currentTo" value="@curTo.ToShortDateString()" class="form-control pull-right datepicker" type="text" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-top:25.4px">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="Search" />
+                </div>
+            </div>
+        </div>
+    </form>
+}
+<table class="table table-hover table-striped" id="tbl-payment" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                <input type="checkbox" name="select-all" />
+            </th>
+            <th></th>
+            <th>
+                @Html.DisplayName("Student Name")
+            </th>
+            <th>
+                @Html.DisplayName("Booking Date")
+            </th>
+            <th>
+                @Html.DisplayName("Booking Information")
+            </th>
+            <th>
+                @Html.DisplayName("Status")
+            </th>
+            <th>
+                @Html.DisplayName("Amount")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            string amount = (item.Price * decimal.Divide((item.BookingTo - item.BookingFrom).Days, 7)).ToString("#,##0.00");
+            <tr>
+                <td>
+                    @if (item.Status == B2S.Core.Enums.BookingStatus.Paid)
+                    {
+                        <input type="checkbox" name="select-payment" disabled/>
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="select-payment" />
+                    }
+                    <input type="hidden" name="bookingId" value="@item.BookingId" />
+                </td>
+                <td>
+                    <div class="tools">
+                        <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-primary btn-xs"><i class="fa fa-list" title="Details"></i></a>
+                    </div>
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+                </td>              
+                <td>
+                    <strong>From:</strong> @item.BookingFrom.ToShortDateString() <br />
+                    <strong>To:</strong> @item.BookingTo.ToShortDateString()
+                </td>
+                <td>
+                    <strong>Property:</strong> @item.Bed.Room.Building.Property.PropertyName | @item.Bed.Room.Building.Name <br />
+                    <strong>Room Type:</strong> @item.Bed.Room.RoomType?.RoomTypeName | <strong>Room:</strong> @item.Bed.Room.RoomName | <strong>Bed:</strong> @item.Bed.Name
+                </td>
+                <td>
+                    <span class="label" style="background-color:@item.Status.GetDisplayName()">
+                        @item.Status.ToString()
+                    </span>
+                </td>
+                <td>
+                    @amount
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="box box-footer no-border ">
+    <div class="form-group">
+        <button id="btn-generate" class="btn btn-success">Create Payments</button>
+    </div>
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var paginationHidden = Model.TotalPages == 1 ? "hidden" : "";
+}
+
+<ul class="pagination pull-right @paginationHidden">
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-search="@ViewData["CurrentSearch"]"
+           asp-route-currentFrom="@ViewData["currentFrom"]"
+           asp-route-currentTo="@ViewData["currentTo"]"
+           class="btn btn-default @prevDisabled">
+            Previous
+        </a>
+    </li>
+    @if (Model.TotalPages <= 11)
+    {
+        @for (var p = 1; p <= Model.TotalPages; p++)
+        {
+            var currentDisabled = Model.PageIndex == p ? "disabled" : "";
+            <li><a href="@Url.Action("Index", new { page = p, search = ViewData["CurrentSearch"], currentFrom = ViewData["CurrentFrom"], currentTo = ViewData["CurrentTo"] })" class="btn btn-default @currentDisabled">@p</a></li>
+        }
+    }
+    else
+    {
+
+        int firstIndex = (Model.PageIndex % 10) == 0 ? (Model.PageIndex / 10 - 1) * 10 + 1 : (Model.PageIndex / 10) * 10 + 1;
+
+        for (int p = firstIndex; p <= Math.Min(firstIndex + 9, Model.TotalPages - 1); p++)
+        {
+            var currentDisabled = Model.PageIndex == p ? "disabled" : "";
+            <li><a href="@Url.Action("Index", new { page = p, search = ViewData["CurrentSearch"], currentFrom = ViewData["CurrentFrom"], currentTo = ViewData["CurrentTo"] })" class="btn btn-default @currentDisabled">@p</a></li>
+        }
+
+        if (firstIndex + 10 < Model.TotalPages)
+        {
+            <li><span class="disabled">...</span></li>
+        }
+        <li><a href="@Url.Action("Index", new { page = Model.TotalPages, search = ViewData["CurrentSearch"], currentFrom = ViewData["CurrentFrom"], currentTo = ViewData["CurrentTo"]})" class="btn btn-default @nextDisabled">@Model.TotalPages</a></li>
+    }
+
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-search="@ViewData["CurrentSearch"]"
+           asp-route-currentFrom="@ViewData["currentFrom"]"
+           asp-route-currentTo="@ViewData["currentTo"]"
+           class="btn btn-default @nextDisabled">
+            Next
+        </a>
+    </li>
+</ul>
+
+<!--modal placeholder-->
+<div class="modal modal-primary fade" id="modalDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+        })
+
+        $("input[name=select-all]").change(function () {
+            if ($(this).prop('checked')) {
+                $('input[name=select-payment]').not(':disabled').prop('checked', true)
+            } else {
+                $('input[name=select-payment]').prop('checked', false)
+            }
+        })
+
+        $('#btn-generate').click(function () {
+            let url = '/Payment/Generate';
+            let checkedBoxes = $("input[name=select-payment]:checked");
+            let selected = [];
+
+            $.each(checkedBoxes, function (key, value) {
+                let bookingId = $(this).closest("td").find("input[name=bookingId]").val();
+                selected.push(bookingId);
+
+            });
+            if (selected.length == 0) {
+                ShowMessageError('Please select payments to generate.');
+                return;
+            }
+            let data = { search: '@curSearch', currentFrom: '@curFrom', currentTo: '@curTo', bookingIds: selected}
+            $.ajax({
+                type: 'Post',
+                url: url,
+                data: data,
+                traditional: true,
+                success: function (data) {
+                    if (data.success) {
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            });
+        })
+
+
+        $("#formSearch").submit(function (e) {
+            //check if start date is less than end date
+            let startDate = $("#currentFrom").val();
+            let endDate = $("#currentTo").val();
+            let partStrDate = startDate.split('/');
+            let partEndDate = endDate.split('/');
+            let strDateJS = new Date(partStrDate[2], partStrDate[0] - 1, partStrDate[1]);
+            let endDateJS = new Date(partEndDate[2], partEndDate[0] - 1, partEndDate[1]);
+            if (endDateJS < strDateJS) {
+                e.preventDefault();
+                ShowMessageError("Start date must be less than end date");
+            }
+        })
+
+        function ShowPopup(url) {
+            var modalId = 'modalDefault';
+            var modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+            $.get(url, function (response) {
+                modalPlaceholder.html(response);
+                popup = $('#' + modalId + '').modal({
+                    keyboard: false,
+                    backdrop: 'static'
+                });
+
+            })
+        }
+    </script>
+}

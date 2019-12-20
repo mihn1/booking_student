@@ -1,0 +1,34 @@
+﻿
+.wizard-steps {
+    display: table;
+    width: 100%;
+    margin: 13px 0;
+}
+
+.wizard-steps .step {
+    display: table-cell;
+    text-align: center;
+    margin: 0 5px;
+    margin-right: 0;
+    padding: 0 10px;
+}
+
+    .wizard-steps .step .active {
+        font-weight: bolder;
+    }
+
+    .wizard-steps .step .badge {
+        background-color: #ccc;
+        margin-bottom: 2px;
+    }
+
+    .wizard-steps .step.active .badge {
+        background-color: #3c8dbc;
+        margin-bottom: 2px;
+    }
+
+.registration.wizard-steps .step {
+    color: #0094ff;
+}
+
+

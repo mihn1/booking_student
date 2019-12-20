@@ -1,0 +1,40 @@
+﻿@{
+    Layout = null;
+    string confirmHidden = ViewData["ConfirmHidden"] as string;
+    string newHidden = ViewData["NewHidden"] as string;
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">@ViewData["Name"]</h4>
+</div>
+<form onsubmit="return SubmitAddEdit(this)">
+    <div class="box-body">
+        @RenderBody()
+    </div>
+
+    <div class="box-footer">
+        <div class="row" style="text-align: center;">
+            <button type="button" name="btn-close" class="btn btn-default" data-dismiss="modal"> Close</button>
+            <button type="button" name="FixBtn" onclick="DeleteBooking(this)" class="btn btn-danger"> Delete</button>
+            <button type="button" name="FixBtn" onclick="MoveBooking(this)" class="btn btn-warning @newHidden"> Move</button>
+            <button type="button" name="FixBtn" onclick="ConfirmBooking(this)" class="btn btn-success @confirmHidden"> Confirm</button>
+            <button type="submit" name="btn-submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>           
+        </div>
+    </div>
+</form>
+
+@await RenderSectionAsync("Styles", required: false)
+
+@await Html.PartialAsync("_B2SPopupScripts")
+
+@await RenderSectionAsync("Scripts", required: false)
+
+
+
+
+
+
+
+

@@ -1,0 +1,185 @@
+﻿@model B2S.Core.Utilities.PaginatedList<B2S.Core.Entities.DamageReport>
+@{
+    ViewData["Title"] = "Damage Report List";
+    Layout = "~/Views/Shared/_B2SPagingIndex.cshtml";
+    ViewData["EntityIcon"] = "fa fa-newspaper-o";
+    ViewData["Name"] = "Damage Report";
+    ViewData["IndexInfo"] = "";
+}
+
+@section SearchBox {
+    <form asp-action="Index" method="get" class="form-horizontal" role="form">
+        <div class="input-group pull-right" style="width:350px" id="boot-search-box">
+            <input type="text" class="form-control search-box-style" name="Search" value="@ViewData["CurrentSearch"]" placeholder="Search by Customer Name" />
+            <div class="input-group-btn">
+                <div class="btn-group" role="group">
+
+                    <div class="dropdown dropdown-lg">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                        <div class="dropdown-menu dropdown-menu-right" role="menu">
+                            <div class="form-group">
+                                <label for="filter">Status</label>
+                                <select name="Status" class="form-control search-box-style" asp-items="ViewBag.Statuses">
+                                    <option value="0">-Select-</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filter">Property</label>
+                                <select name="PropertyId" class="form-control search-box-style" asp-items="ViewBag.PropertyId">
+                                    <option value="">-Select-</option>
+                                </select>
+                            </div>
+                            @*<div class="form-group">
+                                <label for="filter">Vendor</label>
+                                <select name="VendorId" class="form-control search-box-style" asp-items="ViewBag.VendorId">
+                                    <option value="">-Select-</option>
+                                </select>
+                            </div>*@
+                        </div>
+                        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+<table class="table table-hover table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayName("Report Name")
+            </th>
+            <th>
+                @Html.DisplayName("Customer Name")
+            </th>
+            <th>
+                @Html.DisplayName("Type of Damage")
+            </th>
+            <th>
+                @Html.DisplayName("Status")
+            </th>
+            <th>
+                @Html.DisplayName("Date of Incident")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <div class="tools">
+                    <a asp-action="Edit" asp-route-id="@item.ReportId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.ReportId" class="btn btn-primary btn-xs"><i class="fa fa-list"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.ReportId" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                </div>
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DamageType)
+            </td>
+            <td>
+                @item.DamageStatus.ToString()
+            </td>
+            <td>
+                @item.IncidentDate.ToShortDateString()
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var paginationHidden = Model.TotalPages == 1 ? "hidden" : "";
+}
+
+<ul class="pagination pull-right @paginationHidden">
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-search="@ViewData["CurrentSearch"]"
+           asp-route-status="@ViewData["CurrentStatus"]"
+           asp-route-propertyId="@ViewData["CurrentPropertyId"]"
+           asp-route-vendorId="@ViewData["CurrentVendorId"]"
+           class="btn btn-default @prevDisabled">
+            Previous
+        </a>
+    </li>
+    @if (Model.TotalPages <= 11)
+    {
+        @for (var p = 1; p <= Model.TotalPages; p++)
+        {
+            var currentDisabled = Model.PageIndex == p ? "disabled" : "";
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@p"
+           asp-route-search="@ViewData["CurrentSearch"]"
+           asp-route-status="@ViewData["CurrentStatus"]"
+           asp-route-propertyId="@ViewData["CurrentPropertyId"]"
+           asp-route-vendorId="@ViewData["CurrentVendorId"]"
+           class="btn btn-default @currentDisabled">
+            @p
+        </a>
+    </li>
+        }
+    }
+    else
+    {
+
+        int firstIndex = (Model.PageIndex % 10) == 0 ? (Model.PageIndex / 10 - 1) * 10 + 1 : (Model.PageIndex / 10) * 10 + 1;
+
+        for (int p = firstIndex; p <= Math.Min(firstIndex + 9, Model.TotalPages - 1); p++)
+        {
+            var currentDisabled = Model.PageIndex == p ? "disabled" : "";
+            <li>
+                <a asp-action="Index"
+                   asp-route-page="@p"
+                   asp-route-search="@ViewData["CurrentSearch"]"
+                   asp-route-status="@ViewData["CurrentStatus"]"
+                   asp-route-propertyId="@ViewData["CurrentPropertyId"]"
+                   asp-route-vendorId="@ViewData["CurrentVendorId"]"
+                   class="btn btn-default @currentDisabled">
+                    @p
+                </a>
+            </li>
+        }
+
+        if (firstIndex + 10 < Model.TotalPages)
+        {
+            <li><span class="disabled">...</span></li>
+        }
+        <li>
+            <a asp-action="Index"
+               asp-route-page="@Model.TotalPages"
+               asp-route-search="@ViewData["CurrentSearch"]"
+               asp-route-status="@ViewData["CurrentStatus"]"
+               asp-route-propertyId="@ViewData["CurrentPropertyId"]"
+               asp-route-vendorId="@ViewData["CurrentVendorId"]"
+               class="btn btn-default @nextDisabled">
+                @Model.TotalPages
+            </a>
+        </li>
+    }
+
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-search="@ViewData["CurrentSearch"]"
+           asp-route-status="@ViewData["CurrentStatus"]"
+           asp-route-propertyId="@ViewData["CurrentPropertyId"]"
+           asp-route-vendorId="@ViewData["CurrentVendorId"]"
+           class="btn btn-default @nextDisabled">
+            Next
+        </a>
+    </li>
+</ul>

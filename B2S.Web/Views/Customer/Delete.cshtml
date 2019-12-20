@@ -1,0 +1,91 @@
+﻿@model B2S.Core.Entities.Customer
+
+@{
+    ViewData["Title"] = "Delete Customer";
+    ViewData["Name"] = "Customer";
+    Layout = "~/Views/Shared/_B2SDelete.cshtml";
+    ViewData["EntityIcon"] = "fa fa-user-circle";
+    ViewData["DeleteInfo"] = "You don't have permission to delete the customer.";
+    ViewData["IsCanDeleted"] = false;
+   
+}
+
+
+@await Html.PartialAsync("_StatusMessage", (string)ViewBag.StatusMessage)
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+        <dd>
+            @Model.Gender.ToString()
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IDType)
+        </dt>
+        <dd>
+            @Model.IDType.ToString()
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IDNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IDNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Province)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Province)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Postcode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Postcode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Country)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Country)
+        </dd>
+    </dl>
+</div>

@@ -1,0 +1,92 @@
+﻿@model B2S.Core.Entities.Payment
+
+@{
+    ViewData["Name"] = "Payment";
+    Layout = "~/Views/Shared/_B2SPopup.cshtml";
+    var paymentDate = Model.PaymentId == null ? DateTime.Today : Model.PaymentDate;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="PaymentId" />
+        <input type="hidden" asp-for="BookingId" />
+        <input type="hidden" asp-for="Payee" />
+        <input type="hidden" asp-for="AgentId" />
+        <input type="hidden" asp-for="CustomerId" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <input type="hidden" asp-for="CreatedBy" />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Quantity" class="control-label"></label>
+                    <input asp-for="Quantity" class="form-control" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="PaymentDate" class="control-label"></label>
+                    <input asp-for="PaymentDate" type="text" value="@paymentDate.ToShortDateString()" class="form-control datepicker" />
+                    <span asp-validation-for="PaymentDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="PaymentMethod" class="control-label"></label>
+                    <select asp-for="PaymentMethod" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.PaymentMethod>()">
+                        <option value="">-Select</option>
+                    </select>
+                    <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="PaymentStatus" class="control-label"></label>
+                    <select asp-for="PaymentStatus" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.PaymentStatus>()">
+                        <option value="">-Select</option>
+                    </select>
+                    <span asp-validation-for="PaymentStatus" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="IsCreateInvoice" /> @Html.DisplayNameFor(Model => Model.IsCreateInvoice)
+                        </label>
+                        <span asp-validation-for="IsCreateInvoice" class="text-danger row"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div>

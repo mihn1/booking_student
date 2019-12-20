@@ -1,0 +1,143 @@
+﻿@model B2S.Core.Utilities.PaginatedList<B2S.Core.Entities.Expense>
+@{
+    ViewData["Title"] = "Expense List";
+    Layout = "~/Views/Shared/_B2SPagingIndex.cshtml";
+    ViewData["EntityIcon"] = "fa fa-usd";
+    ViewData["Name"] = "Expense List";
+    ViewData["IndexInfo"] = "";
+    bool isVendor = ViewBag.IsVendor ?? false;
+}
+
+@section SearchBox {
+    <form asp-action="Index" method="get" class="form-horizontal" role="form">
+        <div class="input-group pull-right" style="width:350px" id="boot-search-box">
+            <input type="text" class="form-control search-box-style" name="Search" value="@ViewData["CurrentSearch"]" placeholder="Search by expense date, reference" />
+            <div class="input-group-btn">
+                <div class="btn-group" role="group">
+
+                    <div class="dropdown dropdown-lg">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                        <div class="dropdown-menu dropdown-menu-right" role="menu">
+                            <div class="form-group">
+                                <label for="filter">Expense Category</label>
+                                <select name="CategoryId" class="form-control search-box-style" asp-items="@ViewBag.CategoryId">
+                                    <option value="">-Select-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+@await Html.PartialAsync("_StatusMessage", (string)TempData["ErrorMessage"])
+<table class="table table-hover table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayName("Category")
+            </th>
+            <th>
+                @Html.DisplayName("Description")
+            </th>
+            <th>
+                @Html.DisplayName("Date")
+            </th>
+            <th>
+                @Html.DisplayName("Amount")
+            </th>
+            @*<th>
+                @Html.DisplayName("Recipt")
+            </th>*@
+            </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <div class="tools">
+                    <a asp-action="Edit" asp-route-id="@item.ExpenseId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.ExpenseId" class="btn btn-primary btn-xs"><i class="fa fa-list"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.ExpenseId" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                </div>
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @item.ExpenseDate.ToShortDateString()
+            </td>
+            <td>
+                @item.Amount.ToString("#,##0.00")
+            </td>          
+            @*<td>
+                <a class="btn btn-primary btn-xs" href="@Url.Action("GetReceipt", "Expense", new { id = item.ExpenseId })" target="_blank">
+                    <i class="fa fa-file-text-o" title="Receipt"></i>
+                </a>
+            </td>*@
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var paginationHidden = Model.TotalPages == 1 ? "hidden" : "";
+}
+
+<ul class="pagination pull-right @paginationHidden">
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex - 1)"
+           asp-route-search="@ViewData["CurrentSearch"]"
+           asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+           class="btn btn-default @prevDisabled">
+            Previous
+        </a>
+    </li>
+    @if (Model.TotalPages <= 11)
+    {
+        @for (var p = 1; p <= Model.TotalPages; p++)
+        {
+            var currentDisabled = Model.PageIndex == p ? "disabled" : "";
+            <li><a href="@Url.Action("Index", new { page = p, search = ViewData["CurrentSearch"], categoryId = ViewData["CurrentCategoryId"] })" class="btn btn-default @currentDisabled">@p</a></li>
+        }
+    }
+    else
+    {
+
+        int firstIndex = (Model.PageIndex % 10) == 0 ? (Model.PageIndex / 10 - 1) * 10 + 1 : (Model.PageIndex / 10) * 10 + 1;
+
+        for (int p = firstIndex; p <= Math.Min(firstIndex + 9, Model.TotalPages - 1); p++)
+        {
+            var currentDisabled = Model.PageIndex == p ? "disabled" : "";
+            <li><a href="@Url.Action("Index", new { page = p, search = ViewData["CurrentSearch"], categoryId = ViewData["CurrentCategoryId"]  })" class="btn btn-default @currentDisabled">@p</a></li>
+        }
+
+        if (firstIndex + 10 < Model.TotalPages)
+        {
+            <li><span class="disabled">...</span></li>
+        }
+        <li><a href="@Url.Action("Index", new { page = Model.TotalPages, search = ViewData["CurrentSearch"], categoryId = ViewData["CurrentCategoryId"] })" class="btn btn-default @nextDisabled">@Model.TotalPages</a></li>
+    }
+
+    <li>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageIndex + 1)"
+           asp-route-search="@ViewData["CurrentSearch"]"
+           asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+           class="btn btn-default @nextDisabled">
+            Next
+        </a>
+    </li>
+</ul>

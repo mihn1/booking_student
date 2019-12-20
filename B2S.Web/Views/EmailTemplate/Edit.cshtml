@@ -1,0 +1,59 @@
+﻿@model B2S.Core.Entities.EmailTemplate
+
+@{
+    ViewData["Title"] = "Edit Email Template";
+    ViewData["Name"] = "Email Template";
+    Layout = "~/Views/Shared/_B2SEdit.cshtml";
+    ViewData["EntityIcon"] = "fa fa-envelope-o";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="EmailTemplateId" />
+        <div class="form-group">
+            <label asp-for="TemplatName" class="control-label"></label>
+            <input asp-for="TemplatName" class="form-control" />
+            <span asp-validation-for="TemplatName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Subject" class="control-label"></label>
+            <input asp-for="Subject" class="form-control" />
+            <span asp-validation-for="Subject" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Body</label>
+            <textarea asp-for="BodyHTML" class="form-control ckeditor"></textarea>
+            <span asp-validation-for="BodyHTML" class="text-danger"></span>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="IsPublished" /> @Html.DisplayNameFor(model => model.IsPublished)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <!-- CKEDITOR -->
+    <script src="~/adminlte/components/ckeditor/ckeditor.js"></script>
+}
+
+
+

@@ -1,0 +1,104 @@
+﻿@model B2S.Web.ViewModels.BookingMovingViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="BookingId" />
+    <input type="hidden" id="bookingType" value="Move" />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">Booked From</label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input readonly value="@Model.BookingFrom.ToString("MM/dd/yyyy")" class="form-control pull-right datepicker" type="text" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label">To</label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input readonly value="@Model.BookingTo.ToString("MM/dd/yyyy")" class="form-control pull-right datepicker" type="text" />
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="row" id="dateContainer">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="BookingFrom" class="control-label"></label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input asp-for="BookingFrom" value="@Model.BookingFrom.ToString("MM/dd/yyyy")" id="moveDateFrom" class="form-control pull-right datepicker" type="text" />
+                </div>
+                <span asp-validation-for="BookingFrom" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="BookingTo" class="control-label"></label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input asp-for="BookingTo" value="@Model.BookingTo.ToString("MM/dd/yyyy")" id="moveDateTo" class="form-control pull-right datepicker" type="text" />
+                </div>
+                <span asp-validation-for="BookingTo" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label asp-for="BedId" class="control-label"></label>
+            <select asp-for="BedId" id="bedId" class="form-control" asp-items="ViewBag.BedId"></select>
+            <span asp-validation-for="BookingTo" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+
+    <script>                
+        //Date picker
+        $('.datepicker').datepicker({
+            autoclose: true
+        })
+     
+        $("#moveDateFrom,#moveDateTo").change(function () {
+            let url = '/Booking/GetBed'
+            let bookingFrom = $(this).closest("div.row").find("#moveDateFrom").val();
+            let bookingTo = $(this).closest("div.row").find("#moveDateTo").val();
+            $.getJSON(url, { id: '@Model.BookingId', bookingFrom, bookingTo }, function (res) {
+                if (res.success) {
+                    $("#bedId").empty();
+                    let optgroup = [];
+                    $.each(res.data, function (i, item) {
+                        if (optgroup.indexOf(item.group.name) !== -1) {
+                            $("optgroup[label='" + item.group.name + "']").append('<option value="' + item.value + '"> ' + item.text + '</option>');
+                        } else {
+                            optgroup.push(item.group.name)
+                            let newGroup = '<optgroup label="' + item.group.name + '"></optgroup>'
+                            $("#bedId").append(newGroup)
+                            $("optgroup[label='" + item.group.name + "']").append('<option value="' + item.value + '"> ' + item.text + '</option>');
+                        }
+                    });
+                    $("#bedId").val('@Model.BedId').trigger('change');
+                } else {
+                    ShowMessageError(res.data);
+                    return;
+                }              
+            });
+        })
+
+    </script>
+   
+   

@@ -1,0 +1,118 @@
+﻿@model B2S.Core.Entities.User
+
+@{
+    ViewData["Title"] = "Edit User Account";
+    ViewData["Name"] = "User Account";
+    Layout = "~/Views/Shared/_B2SEdit.cshtml";
+    ViewData["EntityIcon"] = "fa fa-user";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ConcurrencyStamp" />
+        <input type="hidden" asp-for="SecurityStamp" />
+        <input type="hidden" asp-for="PasswordHash" />
+        <input type="hidden" asp-for="ProfilePictureUrl" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="UserType" class="control-label">@Html.DisplayName("User Type")</label>
+                    <select asp-for="UserType" class="form-control" asp-items="@Html.GetEnumSelectList<B2S.Core.Enums.UserType>()">
+                        <option value="">-Select-</option>
+                    </select>
+                    <span asp-validation-for="UserType" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label">@Html.DisplayName("Phone Number")</label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="UserProfileId" class="control-label">@Html.DisplayName("User Profile")</label>
+                    <select asp-for="UserProfileId" class="form-control" asp-items="@ViewBag.userProfileId">
+                        <option value="">-Select-</option>
+                    </select>
+                    <span asp-validation-for="UserProfileId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="IsSuperAdmin" /> @Html.DisplayName("Is Super Admin") @*@Html.DisplayNameFor(model => model.IsSuperAdmin)*@
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="EmailConfirmed" /> @Html.DisplayName("Email Confirmed") @*@Html.DisplayNameFor(model => model.EmailConfirmed)*@
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="TwoFactorEnabled" /> @Html.DisplayName("Two Factor Enabled") @*@Html.DisplayNameFor(model => model.TwoFactorEnabled)*@
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="PhoneNumberConfirmed" /> @Html.DisplayName("Phone Confirmed") @*@Html.DisplayNameFor(model => model.PhoneNumberConfirmed)*@
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+

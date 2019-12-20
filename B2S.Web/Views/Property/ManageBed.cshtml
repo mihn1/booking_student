@@ -1,0 +1,141 @@
+﻿@model B2S.Core.Entities.Bed
+@{
+    Layout = null;
+    string action = Model.BedId == null ? "Add Bed:" : "Edit Bed:";
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Task Check List</h4>
+</div>
+<form onsubmit="return SubmitBed(this)">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="BedId" />
+                <input type="hidden" asp-for="RoomId" />
+                <input type="hidden" asp-for="CreatedAt" />
+                <input type="hidden" asp-for="CreatedBy" />
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayName("Property")
+                        </dt>
+                        <dd>
+                            @Model.Room.RoomType.Property.PropertyName
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Building")
+                        </dt>
+                        <dd>
+                            @Model.Room.Building.Name
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Room Type")
+                        </dt>
+                        <dd>
+                            @Model.Room.RoomType.RoomTypeName
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Room")
+                        </dt>
+                        <dd>
+                            @Model.Room.RoomName
+                        </dd>
+                        <dt style="padding-top: 8px;">
+                            @Html.DisplayName(action)
+                        </dt>
+                        <dd style="padding-top: 5px;">
+                            <input asp-for="Name" class="form-control" style="width: 50%;" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="box-footer col-sm-3 col-sm-offset-5">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Default box -->
+        </div>
+    </div>
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Bed List</h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive mailbox-messages">
+                        <table id="grid-bed" class="table table-hover table-striped" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-8 col-sm-10">Bed name</th>
+                                    <th class="col-md-4 col-sm-2"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>                
+                </div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+
+</form>
+
+
+
+@*@await Html.PartialAsync("_CRMPlusBasicStyles")
+
+@await Html.PartialAsync("_CRMPlusBasicScripts")*@
+
+<script>
+    $(document).ready(function () {
+            let entity = 'Bed';
+        let apiurl = '/api/' + entity;
+        bedDt = $('#grid-bed').DataTable({
+            "ajax": {
+                "url": apiurl + '?roomId=@Model.RoomId',
+                    "type": 'GET',
+                    "datatype": 'json'
+                },
+                "columns": [
+                    { "data": "name" },
+                    {
+                        "data": "bedId",
+                        "render": function (data) {
+                           var btnEdit = "<a class='btn btn-primary btn-xs' onclick=ShowPopup('/Property/ManageBed/" + data + "')><i class='fa fa-pencil'></i></a>";
+                            var btnDelete = "<a class='btn btn-danger btn-xs' style='margin-left:2px' onclick=DeleteBed('" + apiurl + "/" + data + "')><i class='fa fa-trash'></i></a>";
+                            return "<div class='tools pull-right'>" + btnEdit + btnDelete + "</div>";
+                        }
+                    }
+                ],
+            "lengthChange": false,
+            "info": false,
+            "searching": false,
+            "dom": 'lrtip',
+            "scrollX": false,
+            "paging": false,
+            "ordering": false,
+            "language": {
+                "emptyTable": "No bed found."
+            }
+        });
+    });    
+
+</script>
+
+
+
+
+
+
+
+

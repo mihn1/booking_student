@@ -1,0 +1,127 @@
+﻿@model B2S.Web.ViewModels.UserSecurity.UserViewModel
+@{
+    ViewData["Title"] = "New User Account";
+    ViewData["Name"] = "User Account";
+    Layout = "~/Views/Shared/_B2SCreate.cshtml";
+    ViewData["CreateInfo"] = "This is used to maintain the Application User.";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="User.Id" />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="User.Email" class="control-label"></label>
+                    <input asp-for="User.Email" class="form-control" />
+                    <span asp-validation-for="User.Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="User.UserType" class="control-label">@Html.DisplayName("User Type")</label>
+                    <select asp-for="User.UserType" class="form-control" asp-items="@Html.GetEnumSelectList<B2S.Core.Enums.UserType>()">
+                        <option value="">-Select-</option>
+                    </select>
+                    <span asp-validation-for="User.UserType" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="control-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="User.FirstName" class="control-label"></label>
+                    <input asp-for="User.FirstName" class="form-control" />
+                    <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="User.LastName" class="control-label"></label>
+                    <input asp-for="User.LastName" class="form-control" />
+                    <span asp-validation-for="User.LastName" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="User.PhoneNumber" class="control-label">@Html.DisplayName("Phone Number")</label>
+                    <input asp-for="User.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="User.UserProfileId" class="control-label">@Html.DisplayName("User Profile")</label>
+                    <select asp-for="User.UserProfileId" class="form-control" asp-items="@ViewBag.userProfileId">
+                        <option value="">-Select-</option>
+                    </select>
+                    <span asp-validation-for="User.UserProfileId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="User.IsSuperAdmin" /> @Html.DisplayName("Is Super Admin")
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="User.EmailConfirmed" /> @Html.DisplayName("Email Confirmed")
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="User.TwoFactorEnabled" /> @Html.DisplayName("Two Factor Enabled")
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="User.PhoneNumberConfirmed" /> @Html.DisplayName("Phone Confirmed")
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

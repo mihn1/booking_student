@@ -1,0 +1,440 @@
+﻿@model IEnumerable<B2S.Core.Entities.Booking>
+@using B2S.Web.Extensions
+@inject B2S.Infrastructure.Data.AppDbContext _context;
+
+@{
+    ViewData["Title"] = "Vendor";
+    Layout = "~/Views/Shared/_B2S.cshtml";
+}
+
+@section Styles {
+    <link href="~/adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" />
+    <style>
+        .small-box .icon {
+            font-size: 75px;
+        }
+    </style>
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        @*<h1>
+            Dashboard
+            <small>Version 2.0</small>
+        </h1>*@
+        @*<ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+        </ol>*@
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3><sup style="font-size: 20px">$</sup>@ViewData["Revenue"]</h3>
+
+                        <p>Total Revenue</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    @*<a href="/Booking/Index" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>*@
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3><sup style="font-size: 20px">$</sup>@ViewData["Expense"]</h3>
+
+                        <p>Total Expense</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    @*<a href="/Booking/Index" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>*@
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>@Model.Count()</h3>
+
+                        <p>Total Booking</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    @*<a href="/Booking/Index" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>*@
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3>@ViewData["VacancyRate"]%</h3>
+
+                        <p>Occupancy Rate</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    @*<a href="/Booking/Index" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>*@
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Latest Bookings</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="table-responsive mailbox-messages">
+                            <table class="table table-hover table-striped" name="tblBooking">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayName("Student Name")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Status")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Booking Info")
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.TakeLast(5))
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.FirstName @item.LastName
+                                            </td>
+                                            <td>
+                                                <span class="label" style="background-color: @item.Status.GetDisplayName()">
+                                                    @item.Status.ToString()
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <strong>Property:</strong> @item.Bed.Room.Building.Property.PropertyName | @item.Bed.Room.Building.Name <br />
+                                                <strong>Room Type:</strong> @item.Bed.Room.RoomType?.RoomTypeName | <strong>Room:</strong> @item.Bed.Room.RoomName | <strong>Bed:</strong> @item.Bed.Name
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+            <!-- Left col -->
+            <div class="col-lg-6 col-sm-12">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Revenue</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body chart-responsive">
+                        <div class="chart" id="revenue-chart" style="height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        </div>
+                    </div>
+                    <!-- /.box-footer -->
+                    <!-- /.box-body -->
+                </div>
+
+
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+
+            <div class="col-lg-6 col-sm-12">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Occupancy</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body chart-responsive">
+                        <div class="chart" id="occupancy-chart" style="height: 300px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- MAP & BOX PANE -->
+                <div class="box box-solid bg-light-blue-gradient">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Student Sources</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding">
+                        <div class="row">
+                            <div class="col-md-10 col-sm-9">
+                                <div class="pad">
+                                    <!-- Map will be created here -->
+                                    <div id="world-map-markers" style="height: 325px;"></div>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-2 col-sm-3">
+                                <div class="pad box-pane-right bg-green" style="min-height: 240px">
+                                    <div class="description-block margin-bottom">
+                                        <div class="sparkbar pad" data-color="#fff"><i class="fa fa-user" width="34" height="30" style="display: inline-block; width: 34px; height: 30px; vertical-align: top; font-size: 30px;"></i></div>
+                                        <h4 class="description-header">@ViewData["DirectBooked"]</h4>
+                                        <span class="description-text">Direct Booking</span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                    <div class="description-block margin-bottom">
+                                        <div class="sparkbar pad" data-color="#fff"><i class="fa fa-id-badge" width="34" height="30" style="display: inline-block; width: 34px; height: 30px; vertical-align: top; font-size: 30px;"></i></div>
+                                        <h4 class="description-header">@ViewData["AgentBooked"]</h4>
+                                        <span class="description-text">Agent Booking</span>
+                                    </div>
+                                    <!-- /.description-block -->
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+
+
+            </div>
+            <!-- /.col -->
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="~/adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="~/adminlte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+
+    <script>
+        var revenueData, occupancyData;
+        $(document).ready(function () {
+            mainTable = $('table[name=tblBooking]').DataTable({
+                "lengthChange": false,
+                "info": false,
+                "searching": false,
+                "dom": 'lrtip',
+                "scrollX": false,
+                "ordering": false,
+                "paging": false,
+                "language": {
+                    "emptyTable": "No data availble"
+                }
+            });
+
+            google.charts.load('current', {
+                packages: ['corechart', 'bar']
+            });
+            google.charts.setOnLoadCallback(LoadData);
+            //function LoadData() {
+            //    return false;
+            //}
+            function LoadData() {
+                $.ajax({
+                    url: '/Vendor/PopulationRevenueChart',
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        revenueData = data;
+                        PopulationRevenueChart(revenueData);
+                        return false;
+                    }
+                });
+
+                $.ajax({
+                    url: '/Vendor/PopulationOccupancyChart',
+                    dataType: "json",
+                    type: "GET",
+                    success: function (data) {
+                        occupancyData = data;
+                        PopulationOccupancyChart(occupancyData);
+                        return false;
+                    }
+                });
+                return false;
+            }
+
+
+              $.getJSON('/Vendor/PopulationMap', function (res) {
+                let data = {};
+                for (var i = 0; i < res.data.length; i++) {
+                    data[res.data[i].country] = res.data[i].count
+                }
+                
+                $('#world-map-markers').vectorMap({
+                    map: 'world_mill_en',
+                    //normalizeFunction: 'polynomial',
+                    hoverOpacity: 0.7,
+                    //hoverColor: false,
+                    backgroundColor: 'transparent',
+                    regionStyle: {
+                        initial: {
+                            fill: '#e4e4e4',
+                            'fill-opacity': 1,
+                            stroke: 'none',
+                            'stroke-width': 0,
+                            'stroke-opacity': 1
+                        }
+                    },
+                    series: {
+                        regions: [{
+                            values: data,
+                            //scale: ['#92c1dc', '#ebf4f9'],
+                            scale: ['#ffb265', '#ffa74f', '#ff9224', '#ff9224', '#e58320', '#cc741c'],
+                            normalizeFunction: 'polynomial'
+                        }]
+                    },
+                    onRegionLabelShow: function (e, el, code) {
+                        if (typeof data[code] != 'undefined' && Number(data[code]) > 0) {
+                            el.html(el.html() + ': ' + data[code] + ' students');
+                        }
+                    },               
+
+                });
+                //let mapCountry = $("#world-map-markers").vectorMap("get", "mapObject");
+                //mapCountry.series.regions[0].setValues(data);
+                //mapCountry.series.regions[0].setScale(scale);
+            });
+
+        });
+
+        $(window).resize(function () {
+            PopulationRevenueChart(revenueData);
+            PopulationOccupancyChart(occupancyData);
+        });
+
+
+        function PopulationRevenueChart(data) {
+            var dataArray = [
+                ['Month', 'Revenue']
+            ];
+            $.each(data, function (i, item) {
+                dataArray.push([item.month, item.revenue]);
+            });
+            var data = google.visualization.arrayToDataTable(dataArray);
+            var options = {
+                //title: 'Revenue',
+                chartArea: {
+                    width: '80%',
+                    height: '70%'
+                },
+                colors: ['rgb(60, 141, 188)'],
+
+                //curveType: 'function',
+                vAxis: {
+                    gridlines: {
+                        count: 4
+                    }
+                },
+                legend: 'none',
+                pointSize: 6,
+                crosshair: { trigger: 'focus', color: 'rgb(60, 141, 188)', opacity: 0.5 }
+
+            };
+            var chart = new google.visualization.LineChart(document.getElementById('revenue-chart'));
+
+            chart.draw(data, options);
+            return false;
+        }
+
+
+        function PopulationOccupancyChart(data) {
+            var dataArray = [
+                ['Month', 'Percent']
+            ];
+            $.each(data, function (i, item) {
+                dataArray.push([item.month, item.percent]);
+            });
+            var data = google.visualization.arrayToDataTable(dataArray);
+            var options = {
+                //title: 'Revenue',
+                chartArea: {
+                    width: '80%',
+                    height: '70%'
+                },
+                colors: ['rgb(0, 166, 90)'],
+                //hAxis: {
+                //    title: 'Month'
+                //    minValue: 0
+                //},
+                //curveType: 'function',
+                vAxis: {
+                    //title: 'Percent (%)',
+                    maxValue: 100,
+                    minValue: 0,
+                    gridlines: {
+                        count: 4
+                    }
+                },
+                legend: 'none',
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById('occupancy-chart'));
+
+            chart.draw(data, options);
+            return false;
+        }
+
+
+    </script>
+}

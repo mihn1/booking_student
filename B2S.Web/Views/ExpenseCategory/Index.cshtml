@@ -1,0 +1,48 @@
+﻿@model IEnumerable<B2S.Core.Entities.ExpenseCategory>
+@{
+    ViewData["Title"] = "Expense Category List";
+    Layout = "~/Views/Shared/_B2SIndex.cshtml";
+    ViewData["EntityIcon"] = "fa fa-columns";
+    ViewData["Name"] = "Expense Category";
+    ViewData["IndexInfo"] = "";
+}
+
+<table class="table table-hover table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="tools">
+                        <a asp-action="Edit" asp-route-id="@item.CategoryId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                        <a asp-action="Details" asp-route-id="@item.CategoryId" class="btn btn-primary btn-xs"><i class="fa fa-list"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.CategoryId" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

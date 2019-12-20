@@ -1,0 +1,56 @@
+﻿@model B2S.Core.Entities.EmailTemplate
+@inject B2S.Infrastructure.Data.AppDbContext _context;
+
+@{
+    ViewData["Title"] = "Delete Email Template";
+    ViewData["Name"] = "Email Template";
+    Layout = "~/Views/Shared/_B2SDelete.cshtml";
+    ViewData["EntityIcon"] = "fa fa-envelope-o";
+    ViewData["DeleteInfo"] = "You don't have permission to delete the email template. If you need any help, please contact admin@crmplus.cloud.";
+    ViewData["IsCanDeleted"] = false;
+    
+}
+
+
+@await Html.PartialAsync("_StatusMessage", (string)ViewBag.StatusMessage)
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplatName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TemplatName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Subject)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Subject)
+        </dd>
+        <dt>
+            @Html.DisplayName("Body")
+        </dt>
+        <dd>
+            <div class="box box-default">
+                <div class="box-body">
+                    @Html.Raw(Model.BodyHTML)
+                </div>
+            </div>
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPublished)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsPublished)
+        </dd>
+    </dl>
+
+</div>

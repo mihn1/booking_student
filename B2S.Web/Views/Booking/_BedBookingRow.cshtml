@@ -1,0 +1,54 @@
+﻿@model IEnumerable<B2S.Web.ViewModels.CalendarCellViewModel>
+@{
+    List<B2S.Web.ViewModels.CalendarCellViewModel> lstModel = Model.ToList();
+}
+@for (int i = 0; i <= lstModel.Count() - 1; i++)
+{
+    var item = lstModel[i];
+
+    if (item.IsHeader)
+    {
+        <td class="dynamic-header @item.HTMLClass">
+            @if (!string.IsNullOrEmpty(item.HTMLInner))
+            {
+                <span>@item.HTMLInner</span>
+            }
+        </td>
+    }
+    else
+    {
+        if (!item.IsTwoBooking)
+        {
+            <td class="dynamic-col @item.HTMLClass" name="dynamic-col">
+                <div class="@item.Gender" title="@item.HTMLInner" onclick="ShowPopup('@Url.Action("Create", "Booking", new { id = item.BookingId, bookingFrom = item.BookingFrom, bedId = item.BedId })')">
+                    @if (item.IsGreenTick)
+                    {
+                        <i class="fa fa-check confirm-success" style="padding-top:7.5px;"></i>
+                    }
+                </div>
+            </td>
+        }
+        // if there are 2 bookings in current day
+        else
+        {
+            var secondItem = lstModel[i + 1];
+            <td class="dynamic-col @item.HTMLClass" name="dynamic-col">
+                <div style="display:block;height:15px;width:31px;border-bottom:1px solid #D4D4D4;" class="@item.Gender", title="@item.HTMLInner" onclick="ShowPopup('@Url.Action("Create", "Booking", new { id = item.BookingId, bookingFrom = item.BookingFrom, bedId = item.BedId })')">
+                    @if (item.IsGreenTick)
+                    {
+                        <i class="fa fa-check confirm-success"></i>
+                    }
+                </div>
+                <div style="display:block;height:16px;width:31px;border-top:1px solid #D4D4D4;" class="@secondItem.Gender.ToString()", title="@secondItem.HTMLInner" onclick="ShowPopup('@Url.Action("Create", "Booking", new { id = secondItem.BookingId, bookingFrom = secondItem.BookingFrom, bedId = secondItem.BedId })')">
+                    @if (secondItem.IsGreenTick)
+                    {
+                        <i class="fa fa-check confirm-success"></i>
+                    }
+                </div>
+            </td>
+            i++;
+        }
+
+    }
+}
+

@@ -1,0 +1,107 @@
+﻿@model B2S.Core.Entities.DamageReport
+
+@{
+    ViewData["Title"] = "Damage Report Details";
+    ViewData["Name"] = "Damage Report";
+    Layout = "~/Views/Shared/_B2SDetails.cshtml";
+    ViewData["EntityIcon"] = "fa fa-newspaper-o";
+}
+
+
+
+<div class="row">
+    <div class="col-md-9">
+        <!-- Default box -->
+        <div class="box box-primary">
+            <div class="box-body">
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ReportName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.ReportName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ReportPerson)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.ReportPerson)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.CustomerName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.CustomerName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.DamageType)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.DamageType)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.DamageStatus)
+                        </dt>
+                        <dd>
+                            @Model.DamageStatus.ToString()
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Property.Vendor)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Property.Vendor.VendorName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Property)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Property.PropertyName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.IncidentDate)
+                        </dt>
+                        <dd>
+                            @Model.IncidentDate.ToShortDateString()
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.EstimateRepairCost)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.EstimateRepairCost)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ActualRepairCost)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.ActualRepairCost)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Description)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Comments)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Comments)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="form-group">
+                    <a asp-action="Edit" asp-route-id="@Model.ReportId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Index" asp-route-id="@Model.ReportId" class="btn btn-default">Back to List</a>
+                </div>
+            </div>
+            <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>

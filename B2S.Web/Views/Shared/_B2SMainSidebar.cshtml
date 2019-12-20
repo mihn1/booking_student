@@ -1,0 +1,480 @@
+﻿@model B2S.Core.Entities.User
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@using B2S.Web.Helpers
+@inject B2S.Infrastructure.Data.AppDbContext Context
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        @if (Model != null)
+        {
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="@Model.ProfilePictureUrl" class="img-circle profilePicture" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>@Model.FirstName @Model.LastName</p>
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+
+        }
+
+        @if (Model != null)
+        {
+            <ul class="sidebar-menu" data-widget="tree">
+
+                @if (Model.UserType == B2S.Core.Enums.UserType.Admin)
+                {
+                    <li class="header">WORKSPACE</li>
+                    @if (User.IsInRole("Dashboard"))
+                    {
+                        <li class="@Html.IsSelected(controller: "Dashboard")">
+                            <a href="@Url.Action("Index", "Dashboard")">
+                                <i class="fa fa-bar-chart"></i> <span>Dashboard</span>
+                            </a>
+
+                        </li>
+                    }
+                    @if (User.IsInRole("Booking"))
+                    {
+                        <li class="@Html.IsSelected(controller: "Booking")">
+                            <a href="@Url.Action("Index", "Booking")">
+                                <i class="fa fa-calendar"></i> <span>Booking</span>
+                            </a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Event"))
+                    {
+                        <li class="@Html.IsSelected(controller: "Event")">
+                            <a href="@Url.Action("Index", "Event")">
+                                <i class="fa fa-calendar-o"></i> <span>Upcoming Events</span>
+                            </a>
+
+                        </li>
+                    }
+                    @if (User.IsInRole("Invoice"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "Invoice")">
+                                <i class="fa fa-money"></i>
+                                <span> Payments & Invoicing</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Payment")"><i class="fa fa-product-hunt"></i> Manage Payments</a></li>
+                                <li><a href="@Url.Action("GenerateInvoice", "Invoice")"><i class="fa fa-cogs"></i> Generate Invoices</a></li>
+                                <li><a href="@Url.Action("Index", "Invoice")"><i class="fa fa-list-ol"></i> Invoice List</a></li>
+                                <li><a href="@Url.Action("Create", "Invoice")"><i class="fa fa-plus-square-o"></i> New Invoice</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("Expense"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "Expense")">
+                                <i class="fa fa-usd"></i>
+                                <span> Expenses</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Expense")"><i class="fa fa-list-ol"></i> Expense List</a></li>
+                                <li><a href="@Url.Action("Create", "Expense")"><i class="fa fa-plus-square-o"></i> New Expense</a></li>
+                            </ul>
+                        </li>
+                    }
+                    <li class="header">REPORTS</li>
+                    @if (User.IsInRole("StudentReport"))
+                    {
+                        <li class="@Html.IsSelected(controller: "StudentReport")">
+                            <a href="@Url.Action("Index", "StudentReport")">
+                                <i class="fa fa-user-o"></i> <span>Student Report</span>
+                            </a>
+
+                        </li>
+                    }
+                    @if (User.IsInRole("UnconfirmedBooking"))
+                    {
+                        <li class="@Html.IsSelected(controller: "UnconfirmedBooking")">
+                            <a href="@Url.Action("Index", "UnconfirmedBooking")">
+                                <i class="fa fa-calendar-check-o"></i> <span>Unconfirmed Bookings</span>
+                            </a>
+                        </li>
+                    }
+
+                    <li class="header">ADMINISTRATION</li>
+                    @if (User.IsInRole("Customer"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "Customer")">
+                                <i class="fa fa-user-circle"></i>
+                                <span> Customers</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Customer")"><i class="fa fa-list-ol"></i> Customer List</a></li>
+                                <li><a href="@Url.Action("Create", "Customer")"><i class="fa fa-plus-square-o"></i> New Customer</a></li>
+
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("Agent"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "Agent")">
+                                <i class="fa fa-id-badge"></i>
+                                <span> User Agents</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Agent")"><i class="fa fa-list-ol"></i> Agent List</a></li>
+                                <li><a href="@Url.Action("Create", "Agent")"><i class="fa fa-plus-square-o"></i> New Agent</a></li>
+
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("Vendor"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "Vendor")">
+                                <i class="fa fa-street-view"></i>
+                                <span> Vendors</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Vendor")"><i class="fa fa-list-ol"></i> Vendor List</a></li>
+                                <li><a href="@Url.Action("Create", "Vendor")"><i class="fa fa-plus-square-o"></i> New Vendor</a></li>
+
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("Property"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "Property")">
+                                <i class="fa fa-university"></i>
+                                <span> Properties</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Property")"><i class="fa fa-list-ol"></i> Property List</a></li>
+                                <li><a href="@Url.Action("Create", "Property")"><i class="fa fa-plus-square-o"></i> New Property</a></li>
+
+                            </ul>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("DamageReport"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "DamageReport")">
+                                <i class="fa fa-newspaper-o"></i>
+                                <span> Damage Reports</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "DamageReport")"><i class="fa fa-list-ol"></i> Damage Report List</a></li>
+                                <li><a href="@Url.Action("Create", "DamageReport")"><i class="fa fa-plus-square-o"></i> New Damage Report</a></li>
+
+                            </ul>
+                        </li>
+                    }
+                    <li class="header">USER ACCOUNT & SECURITY</li>
+                    @if (User.IsInRole("User"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "User")">
+                                <i class="fa fa-user"></i>
+                                <span> User Accounts</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "User")"><i class="fa fa-list-ol"></i> User Account List</a></li>
+                                <li><a href="@Url.Action("Create", "User")"><i class="fa fa-plus-square-o"></i> New User Account</a></li>
+
+                            </ul>
+                        </li>
+                    }
+                    @if (User.IsInRole("UserProfile"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "UserProfile")">
+                                <i class="fa fa-user-plus"></i>
+                                <span> User Profiles</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "UserProfile")"><i class="fa fa-list-ol"></i> User Profile List</a></li>
+                                <li><a href="@Url.Action("Create", "UserProfile")"><i class="fa fa-plus-square-o"></i> New User Profile</a></li>
+                            </ul>
+                        </li>
+                    }
+                    <li class="header">SETTINGS</li>
+                    @if (User.IsInRole("InvoiceSetting"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "InvoiceSetting")">
+                                <i class="fa fa-wpforms"></i>
+                                <span> Invoice Settings</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "InvoiceSetting")"><i class="fa fa-list-ol"></i> Invoice Setting List</a></li>
+                                <li><a href="@Url.Action("Create", "InvoiceSetting")"><i class="fa fa-plus-square-o"></i> New Invoice Setting</a></li>
+
+                            </ul>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("ExpenseCategory"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "ExpenseCategory")">
+                                <i class="fa fa-columns"></i>
+                                <span> Expense Categories</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "ExpenseCategory")"><i class="fa fa-list-ol"></i> Expense Category List</a></li>
+                                <li><a href="@Url.Action("Create", "ExpenseCategory")"><i class="fa fa-plus-square-o"></i> New Expense Category</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("EmailTemplate"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "EmailTemplate")">
+                                <i class="fa fa-envelope-o"></i>
+                                <span> Email Templates</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "EmailTemplate")"><i class="fa fa-list-ol"></i> Email Template List</a></li>
+                                <li><a href="@Url.Action("Create", "EmailTemplate")"><i class="fa fa-plus-square-o"></i> New Email Template</a></li>
+
+                            </ul>
+                        </li>
+                    }
+
+                }
+                else if (Model.UserType == B2S.Core.Enums.UserType.Agent)
+                {
+                    <li class="header">WORKSPACE</li>
+                    @if (User.IsInRole("Booking"))
+                    {
+                        <li class="@Html.IsSelected(controller: "Booking")">
+                            <a href="@Url.Action("Index", "Booking")">
+                                <i class="fa fa-calendar"></i> <span>Booking</span>
+                            </a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Event"))
+                    {
+                        <li class="@Html.IsSelected(controller: "Event")">
+                            <a href="@Url.Action("Index", "Event")">
+                                <i class="fa fa-calendar-o"></i> <span>Upcoming Events</span>
+                            </a>
+
+                        </li>
+                    }
+
+                    <li class="header">REPORTS</li>
+                    @if (User.IsInRole("StudentReport"))
+                    {
+                        <li class="@Html.IsSelected(controller: "StudentReport")">
+                            <a href="@Url.Action("Index", "StudentReport")">
+                                <i class="fa fa-user-o"></i> <span>Student Report</span>
+                            </a>
+
+                        </li>
+                    }
+                    @if (User.IsInRole("UnconfirmedBooking"))
+                    {
+                        <li class="@Html.IsSelected(controller: "UnconfirmedBooking")">
+                            <a href="@Url.Action("Index", "UnconfirmedBooking")">
+                                <i class="fa fa-calendar-check-o"></i> <span>Unconfirmed Bookings</span>
+                            </a>
+                        </li>
+                    }
+
+                }
+                else if (Model.UserType == B2S.Core.Enums.UserType.Vendor)
+                {
+                    <li class="header">WORKSPACE</li>
+                    @if (User.IsInRole("Dashboard"))
+                    {
+                        <li class="@Html.IsSelected(controller: "Vendor")">
+                            <a href="@Url.Action("Dashboard", "Vendor")">
+                                <i class="fa fa-bar-chart"></i> <span>Dashboard</span>
+                            </a>
+
+                        </li>
+                    }
+                    @if (User.IsInRole("Event"))
+                    {
+                        <li class="@Html.IsSelected(controller: "Event")">
+                            <a href="@Url.Action("Index", "Event")">
+                                <i class="fa fa-calendar-o"></i> <span>Upcoming Events</span>
+                            </a>
+
+                        </li>
+                    }
+                    @if (User.IsInRole("Booking"))
+                    {
+                        <li class="@Html.IsSelected(controller: "Booking")">
+                            <a href="@Url.Action("Index", "Booking")">
+                                <i class="fa fa-calendar"></i> <span>Booking</span>
+                            </a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Invoice"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "Invoice")">
+                                <i class="fa fa-money"></i>
+                                <span> Payments & Invoicing</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Payment")"><i class="fa fa-product-hunt"></i> Manage Payments</a></li>
+                                <li><a href="@Url.Action("GenerateInvoice", "Invoice")"><i class="fa fa-cogs"></i> Generate Invoices</a></li>
+                                <li><a href="@Url.Action("Index", "Invoice")"><i class="fa fa-list-ol"></i> Invoice List</a></li>
+                                <li><a href="@Url.Action("Create", "Invoice")"><i class="fa fa-plus-square-o"></i> New Invoice</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Expense"))
+                    {
+                        <li class="treeview">
+                            <a href="@Url.Action("Index", "Expense")">
+                                <i class="fa fa-usd"></i>
+                                <span> Expenses</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "Expense")"><i class="fa fa-list-ol"></i> Expense List</a></li>
+                                <li><a href="@Url.Action("Create", "Expense")"><i class="fa fa-plus-square-o"></i> New Expense</a></li>
+                            </ul>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Property") || User.IsInRole("DamageReport"))
+                    {
+                        <li class="header">PROPERTY MANAGEMENT</li>
+
+                        @if (User.IsInRole("Property"))
+                        {
+                            <li class="treeview">
+                                <a href="@Url.Action("Index", "Property")">
+                                    <i class="fa fa-university"></i>
+                                    <span> Properties</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="@Url.Action("Index", "Property")"><i class="fa fa-list-ol"></i> Property List</a></li>
+                                    <li><a href="@Url.Action("Create", "Property")"><i class="fa fa-plus-square-o"></i> New Property</a></li>
+
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("DamageReport"))
+                        {
+                            <li class="treeview">
+                                <a href="@Url.Action("Index", "DamageReport")">
+                                    <i class="fa fa-newspaper-o"></i>
+                                    <span> Damage Reports</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="@Url.Action("Index", "DamageReport")"><i class="fa fa-list-ol"></i> Damage Report List</a></li>
+                                    <li><a href="@Url.Action("Create", "DamageReport")"><i class="fa fa-plus-square-o"></i> New Damage Report</a></li>
+
+                                </ul>
+                            </li>
+                        }
+
+                    }
+                    <li class="header">REPORTS</li>
+                    @if (User.IsInRole("StudentReport"))
+                    {
+                        <li class="@Html.IsSelected(controller: "StudentReport")">
+                            <a href="@Url.Action("Index", "StudentReport")">
+                                <i class="fa fa-user-o"></i> <span>Student Report</span>
+                            </a>
+
+                        </li>
+                    }
+                    @if (User.IsInRole("UnconfirmedBooking"))
+                    {
+                        <li class="@Html.IsSelected(controller: "UnconfirmedBooking")">
+                            <a href="@Url.Action("Index", "UnconfirmedBooking")">
+                                <i class="fa fa-calendar-check-o"></i> <span>Unconfirmed Bookings</span>
+                            </a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    @if (Model.Workspace)
+                    {
+                        <li class="header">WORKSPACE</li>
+                        @if (User.IsInRole("Dashboard"))
+                        {
+                            <li class="@Html.IsSelected(controller: "Dashboard")">
+                                <a href="@Url.Action("Index", "Dashboard")">
+                                    <i class="fa fa-bar-chart"></i> <span>Dashboard</span>
+                                </a>
+
+                            </li>
+                        }
+                        @if (User.IsInRole("Booking"))
+                        {
+                            <li class="@Html.IsSelected(controller: "Booking")">
+                                <a href="@Url.Action("Index", "Booking")">
+                                    <i class="fa fa-calendar"></i> <span>Booking</span>
+                                </a>
+                            </li>
+                        }
+
+                    }
+                }
+            </ul>
+        }
+    </section>
+    <!-- /.sidebar -->
+</aside>

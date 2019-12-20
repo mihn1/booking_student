@@ -1,0 +1,327 @@
+﻿@model B2S.Core.Entities.Invoice
+
+@{
+    ViewData["Title"] = "Edit Invoice";
+    ViewData["Name"] = "Invoice";
+    Layout = "~/Views/Shared/_B2S.cshtml";
+    ViewData["EntityIcon"] = "fa fa-money";
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            <i class="fa fa-usd text-primary"></i> Edit Invoice
+        </h1>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-9">
+                <!-- Default box -->
+                <div class="box box-primary">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form asp-action="Edit">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="InvoiceId" />
+                                    <input type="hidden" asp-for="CreatedAt" />
+                                    <input type="hidden" asp-for="CreatedBy" />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label asp-for="InvoiceNumber" class="control-label"></label>
+                                                <input asp-for="InvoiceNumber" readonly class="form-control" />
+                                                <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="InvoiceDate" class="control-label"></label>
+                                                <input asp-for="InvoiceDate" value="@Model.InvoiceDate.ToShortDateString()" type="text" class="form-control datepicker" />
+                                                <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="DueDate" class="control-label"></label>
+                                                <input asp-for="DueDate" value="@Model.DueDate.ToShortDateString()" type="text" class="form-control datepicker" />
+                                                <span asp-validation-for="DueDate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="TaxAmount" class="control-label"></label>
+                                                <input asp-for="TaxAmount" class="form-control" />
+                                                <span asp-validation-for="TaxAmount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="DiscountAmount" class="control-label"></label>
+                                                <input asp-for="DiscountAmount" class="form-control" />
+                                                <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="SubTotal" class="control-label"></label>
+                                                <input asp-for="SubTotal" class="form-control" />
+                                                <span asp-validation-for="SubTotal" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="InvoiceAmount" class="control-label"></label>
+                                                <input asp-for="InvoiceAmount" class="form-control" />
+                                                <span asp-validation-for="InvoiceAmount" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="PaymentStatus" class="control-label"></label>
+                                                <select asp-for="PaymentStatus" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.PaymentStatus>()"></select>
+                                                <span asp-validation-for="PaymentStatus" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(Model.AgentId))
+                                        {
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label asp-for="AgentId" class="control-label"></label>
+                                                    <select asp-for="AgentId" class="form-control select2" asp-items="ViewBag.AgentId"></select>
+                                                    <span asp-validation-for="AgentId" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (!string.IsNullOrEmpty(Model.CustomerId))
+                                        {
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label asp-for="CustomerId" class="control-label"></label>
+                                                    <select asp-for="CustomerId" class="form-control select2" asp-items="ViewBag.CustomerId"></select>
+                                                    <span asp-validation-for="CustomerId" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <a asp-action="Index" class="btn btn-default">Back to List</a>
+                        </div>
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+                <!-- /.box -->
+
+            </div>
+            <div class="col-md-3">
+                @if (!String.IsNullOrEmpty(ViewBag.EditInfo))
+                {
+                    <div class="callout callout-info" style="margin-bottom: 0!important;">
+                        <h4><i class="fa fa-info"></i> Info:</h4>
+                        <p>
+                            @ViewBag.EditInfo
+                        </p>
+                    </div>
+
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <!-- Default box -->
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Invoice Items</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <table id="grid-item" name="grid-item" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-md-3">Item</th>
+                                            <th class="col-md-5">Description</th>
+                                            <th class="col-md-1">Price</th>
+                                            <th class="col-md-1">Quantity</th>
+                                            <th class="col-md-1">Amount</th>
+                                            <th class="col-lg-1"></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a class="btn btn-success" style="margin-bottom:10px" onclick="ShowPopup('@Url.Action("CreateItem","Invoice", new { invoiceId = Model.InvoiceId })')"><i class="fa fa-plus"></i> Add Item</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+
+<!--modal placeholder-->
+<div class="modal modal-primary fade" id="modalDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var popup, dataTable
+        var entity = 'InvoiceItem';
+        var apiurl = '/api/' + entity;
+
+        $(document).ready(function () {
+            dataTable = $('#grid-item').DataTable({
+                "ajax": {
+                    "url": apiurl + '?invoiceId=@Model.InvoiceId',
+                    "type": 'GET',
+                    "datatype": 'json'
+                },
+                "columns": [
+                    { "data": "item" },
+                    { "data": "description" },
+                    { "data": "price"},
+                    { "data": "quantity" },
+                    { "data": "amount" },
+                    {
+                        "data": "invoiceItemId",
+                        "render": function (data) {
+                            var btnEdit = "<a class='btn btn-primary btn-xs' onclick=ShowPopup('/Invoice/CreateItem/" + data + "')><i class='fa fa-pencil'></i></a>";
+                            var btnDelete = "<a class='btn btn-danger btn-xs' style='margin-left:2px' onclick=Delete('/api/" + entity + "/" + data + "')><i class='fa fa-trash'></i></a>";
+                            return "<div class='tools pull-right'>" + btnEdit + btnDelete + "</div>";
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No data found."
+                },
+                "lengthChange": false,
+                "info": false,
+                "searching": false,
+                "paging": false,
+                "columnDefs": [{
+                    "targets": 5,
+                    "orderable": false
+                }]
+            });
+        })
+
+         function ShowPopup(url) {
+            var modalId = 'modalDefault';
+            var modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+            $.get(url)
+                .done(function (response) {
+                    modalPlaceholder.html(response);
+                    popup = $('#' + modalId + '').modal({
+                        keyboard: false,
+                        backdrop: 'static'
+                    });
+                });
+        }
+
+        function SubmitItem(btn) {
+            $(btn).closest('form').submit()
+            return false;
+        }
+
+        function SubmitAddEdit(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                //need this because of auto generated hidden input for checkbox in asp.net core
+                var checkedboxes = $(form).find("input[type='checkbox']:checked");
+                checkedboxes.each(function () {
+                    let name = $(this).attr("name");
+                    $("input[type='hidden'][name='" + name + "']").val('true');
+                })
+                var replacer = function (key, value) { if (value === undefined || value === '') { return null; } return value; };
+                var data = $(form).serializeJSON();
+                data = JSON.stringify(data, replacer);
+                $.ajax({
+                    type: 'POST',
+                    url: apiurl,
+                    data: data,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.success) {
+                            popup.modal('hide');
+                            ShowMessage(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+
+        function Delete(url) {
+            swal({
+                title: "Are you sure want to Delete?",
+                text: "You will not be able to restore the data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            ShowMessage(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+    </script>
+}
+
+
+

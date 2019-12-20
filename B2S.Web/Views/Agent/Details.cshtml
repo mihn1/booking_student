@@ -1,0 +1,114 @@
+﻿@model B2S.Core.Entities.Agent
+
+@{
+    ViewData["Title"] = "Agent Details";
+    ViewData["Name"] = "Agent";
+    Layout = "~/Views/Shared/_B2SDetails.cshtml";
+    ViewData["EntityIcon"] = "fa fa-id-badge";
+}
+
+
+
+<div class="row">
+    <div class="col-md-9">
+        <!-- Default box -->
+        <div class="box box-primary">
+            <div class="box-body">
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.BusinessName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.BusinessName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.LegalName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.LegalName)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model.BusinessNumber)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.BusinessNumber)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Invoice Setting")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.InvoiceSetting.Name)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.ContactName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.ContactName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Phone)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Phone)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Fax)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Fax)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Email)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Address)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Address)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.City)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.City)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Province)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Province)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Postcode)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Postcode)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Country)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Country)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="form-group">
+                    <a asp-action="Edit" asp-route-id="@Model.AgentId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Index" asp-route-id="@Model.AgentId" class="btn btn-default">Back to List</a>
+                </div>
+            </div>
+            <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>

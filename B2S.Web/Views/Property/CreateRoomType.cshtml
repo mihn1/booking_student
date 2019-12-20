@@ -1,0 +1,57 @@
+﻿@model B2S.Core.Entities.RoomType
+
+@{
+    Layout = null;
+    ViewData["Name"] = "Room Type";
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Add / Edit Room Type</h4>
+</div>
+<form asp-action="Create" onsubmit="return SubmitAddEdit(this)">
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RoomTypeId" />
+                <input type="hidden" asp-for="PropertyId" />
+                <input type="hidden" asp-for="CreatedAt" />
+                <input type="hidden" asp-for="CreatedBy" />
+                <div class="form-group">
+                    <label asp-for="RoomTypeName" class="control-label"></label>
+                    <input asp-for="RoomTypeName" class="form-control" />
+                    <span asp-validation-for="RoomTypeName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RoomTypeValue" class="control-label"></label>
+                    <textarea asp-for="RoomTypeValue" class="form-control"></textarea>
+                    <span asp-validation-for="RoomTypeValue" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DiscountAmount" class="control-label"></label>
+                    <input asp-for="DiscountAmount" class="form-control" />
+                    <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DepositAmount" class="control-label"></label>
+                    <input asp-for="DepositAmount" class="form-control" />
+                    <span asp-validation-for="DepositAmount" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box-footer">
+        <button type="button" onclick="return SubmitItem(this)" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Submit</button>
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+    </div>
+</form>
+
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

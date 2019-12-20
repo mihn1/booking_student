@@ -1,0 +1,48 @@
+﻿@model B2S.Core.Entities.Booking
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            Property Name
+        </dt>
+        <dd>
+            @Model.Bed.Room.Property.PropertyName / @Model.Bed.Room.Building.Name
+        </dd>
+        <dt>
+            Room Number
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Bed.Room.RoomName)
+        </dd>
+        <dt>
+            Room Type
+        </dt>
+        <dd>
+            @Model.Bed.Room.RoomType?.RoomTypeName
+        </dd>
+        <dt>
+            Bed Number
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Bed.Name)
+        </dd>
+        <dt>
+            Price
+        </dt>
+        <dd>
+            @(Model.BookingId != null ? Model.Price : Model.Bed.Room.RoomType?.Price)
+        </dd>
+        <dt>
+            Deposit Amount
+        </dt>
+        <dd>
+            @(Model.BookingId != null ? Model.DepositAmount : Model.Bed.Room.RoomType?.DepositAmount)
+        </dd>
+        <dt>
+            Discount Amount
+        </dt>
+        <dd>
+            @(Model.BookingId != null ? Model.DiscountAmount : Model.Bed.Room.RoomType?.DiscountAmount)
+        </dd>
+    </dl>
+</div>

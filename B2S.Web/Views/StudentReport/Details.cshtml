@@ -1,0 +1,246 @@
+﻿@model B2S.Core.Entities.Booking
+
+
+@{
+    ViewData["Name"] = "Booking";
+    Layout = "~/Views/Shared/_B2SPopupBooking.cshtml";
+}
+@section Styles {
+    <style>
+        .btn[name=FixBtn], .btn[name=btn-submit] {
+            display: none;
+        }
+        .modal-dialog {
+            width: 70% !important;
+        }
+    </style>
+  
+}
+<div class="row">
+    <div class="col-md-4">
+        <!-- Default box -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">This booking is for:</h3>
+
+            </div>
+            <div class="box-body">
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Property Name
+                        </dt>
+                        <dd>
+                            @Model.Bed.Room.Property.PropertyName / @Model.Bed.Room.Building.Name
+                        </dd>
+                        <dt>
+                            Room Number
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Bed.Room.RoomName)
+                        </dd>
+                        <dt>
+                            Room Type
+                        </dt>
+                        <dd>
+                            @Model.Bed.Room.RoomType?.RoomTypeName
+                        </dd>
+                        <dt>
+                            Bed Number
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Bed.Name)
+                        </dd>
+                        <dt>
+                            Price
+                        </dt>
+                        <dd>
+                            @Model.Price
+                        </dd>
+                        <dt>
+                            Deposit Amount
+                        </dt>
+                        <dd>
+                            @Model.DepositAmount
+                        </dd>
+                        <dt>
+                            Discount Amount
+                        </dt>
+                        <dd>
+                            @Model.DiscountAmount
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Notes List:</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12 table-responsive">
+                                    <table id="tblNoteList" class="table" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-md-12 col-xs-12"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+            </div>
+        </div>
+        <!-- /.box -->
+    </div>
+    <div class="col-md-8" id="bookingContainer">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input asp-for="FirstName" class="form-control" readonly />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" class="form-control" readonly />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Nationality" class="control-label"></label>
+                    <input value="@Model.Nationality" class="form-control" readonly />
+                    <input asp-for="Nationality" type="hidden" />
+                    <span asp-validation-for="Nationality" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Gender" class="control-label"></label>
+                    <input value="@Model.Gender.ToString()" class="form-control" readonly />
+                    <input asp-for="Gender" type="hidden" />
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="IDType" class="control-label"></label>
+                    <input value="@Model.IDType.ToString()" class="form-control" readonly />
+                    <input asp-for="IDType" type="hidden" />
+                    <span asp-validation-for="IDType" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="IDNumber" class="control-label"></label>
+                    <input asp-for="IDNumber" class="form-control" readonly />
+                    <span asp-validation-for="IDNumber" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input asp-for="Phone" class="form-control" readonly />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" readonly />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">Booking From</label>
+                    <div class="input-group date">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input asp-for="BookingFrom" value="@Model.BookingFrom.ToString("MM/dd/yyyy")" class="form-control pull-right datepicker" type="text" readonly />
+                    </div>
+                    <span asp-validation-for="BookingFrom" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">To</label>
+                    <div class="input-group date">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input asp-for="BookingTo" value="@Model.BookingTo.ToShortDateString()" class="form-control pull-right datepicker" type="text" readonly />
+                    </div>
+                    <span asp-validation-for="BookingTo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var tblNoteList;
+        var entity = 'BookingNote';
+        var url = '/api/' + entity;
+        $(document).ready(function () {
+        $(".modal-title").html('Booking Details')
+        tblNoteList = $('#tblNoteList').DataTable({
+            "ajax": {
+                    "url": url + '?bookingId=@Model.BookingId',
+                    "type": 'GET',
+                    "datatype": 'json'
+                },
+                "columns": [
+                    {
+                        "data": "description",
+                        "render": function (data) {
+                            return "<textarea style='width:100%;' name='description' disabled>" + data + "</textarea>";
+                        }
+                    }                  
+                ],
+            "lengthChange": false,
+            "info": false,
+            "searching": false,
+            "dom": 'lrtip',
+            "scrollX": false,
+            "paging": false,
+            "ordering": false,
+            "language": {
+                "emptyTable": " "
+            }
+        });
+    });
+
+
+
+        $(".modal").on('hidden.bs.modal', function () {
+            $(this).find(".modal-content").html("");
+            $(this).data('bs.modal', null);
+        });
+
+    </script>
+}

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<B2S.Core.Entities.UserProfile>
+
+@{
+    ViewData["Title"] = "User Profiles";
+    Layout = "~/Views/Shared/_B2SIndex.cshtml";
+    ViewData["EntityIcon"] = "fa fa-user-plus";
+    ViewData["Name"] = "User Profile";
+    ViewData["IndexInfo"] = "";
+}
+
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserProfileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="tools">
+                        <a asp-action="Edit" asp-route-id="@item.UserProfileId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                        <a asp-action="Details" asp-route-id="@item.UserProfileId" class="btn btn-primary btn-xs"><i class="fa fa-list"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.UserProfileId" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserProfileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

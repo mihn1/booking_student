@@ -1,0 +1,289 @@
+﻿@model B2S.Web.ViewModels.UserAccess.SignUpViewModel
+@{
+    ViewData["Title"] = "Sign Up";
+    Layout = "~/Views/Shared/_B2SRegister.cshtml";
+}
+
+@section Styles {
+    <link href="~/adminlte/components/colorlib-wizard-20/css/style.css" rel="stylesheet" />
+}
+<div class="main">
+
+    <div class="container">
+        <form method="POST" id="signup-form" class="signup-form" enctype="multipart/form-data">
+            <h3>
+                Account Setup
+            </h3>
+            <fieldset>
+                <h2>Creat your account</h2>
+                <div asp-validation-summary="ModelOnly" class="text-danger" style="color: red"></div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="control-label"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName" class="control-label"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-group-2">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" id="password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-group-2">
+                        <label asp-for="UserType" class="control-label"></label>
+                        <select asp-for="UserType" id="accType" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.UserType>().Where(x => x.Text != B2S.Core.Enums.UserType.Admin.ToString())">
+                            <option value="">-Select-</option>
+                        </select>
+                        <span asp-validation-for="UserType" class="text-danger"></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <h3>
+                Personal Details
+            </h3>
+            <fieldset name="step-2">
+                <h2>Profiles</h2>
+
+                <div id="customer" name="type-2" class="dynamic-type">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Customer.Gender" class="control-label"></label>
+                            <select asp-for="Customer.Gender" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.Gender>()"></select>
+                            <span asp-validation-for="Customer.Gender" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Customer.IDType" class="control-label"></label>
+                            <select asp-for="Customer.IDType" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.IDType>()">
+                                <option value="0">-Select-</option>
+                            </select>
+                            <span asp-validation-for="Customer.IDType" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Customer.Phone" class="control-label"></label>
+                            <input asp-for="Customer.Phone" class="form-control" />
+                            <span asp-validation-for="Customer.Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Customer.IDNumber" class="control-label"></label>
+                            <input asp-for="Customer.IDNumber" class="form-control" />
+                            <span asp-validation-for="Customer.IDNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group-2">
+                            <label asp-for="Customer.Address" class="control-label"></label>
+                            <textarea asp-for="Customer.Address" class="form-control"></textarea>
+                            <span asp-validation-for="Customer.Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Customer.City" class="control-label"></label>
+                            <input asp-for="Customer.City" class="form-control" />
+                            <span asp-validation-for="Customer.City" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Customer.Province" class="control-label"></label>
+                            <input asp-for="Customer.Province" class="form-control" />
+                            <span asp-validation-for="Customer.Province" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Customer.Postcode" class="control-label"></label>
+                            <input asp-for="Customer.Postcode" class="form-control" />
+                            <span asp-validation-for="Customer.Postcode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Customer.Country" class="control-label"></label>
+                            <select asp-for="Customer.Country" class="form-control" asp-items="new SelectList(B2S.Core.Utilities.CommonHelper.CountryList())">
+                                <option value="">-Select-</option>
+                            </select>
+                            <span asp-validation-for="Customer.Country" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="vendor" name="type-3" class="dynamic-type">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Vendor.VendorName" class="control-label"></label>
+                            <input asp-for="Vendor.VendorName" class="form-control" />
+                            <span asp-validation-for="Vendor.VendorName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Vendor.ContactName" class="control-label"></label>
+                            <input asp-for="Vendor.ContactName" class="form-control" />
+                            <span asp-validation-for="Vendor.ContactName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Vendor.Phone" class="control-label"></label>
+                            <input asp-for="Vendor.Phone" class="form-control" />
+                            <span asp-validation-for="Vendor.Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Vendor.Fax" class="control-label"></label>
+                            <input asp-for="Vendor.Fax" class="form-control" />
+                            <span asp-validation-for="Vendor.Fax" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group-2">
+                            <label asp-for="Vendor.Email" class="control-label"></label>
+                            <input asp-for="Vendor.Email" class="form-control" />
+                            <span asp-validation-for="Vendor.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group-2">
+                            <label asp-for="Vendor.Address" class="control-label"></label>
+                            <textarea asp-for="Vendor.Address" class="form-control"></textarea>
+                            <span asp-validation-for="Vendor.Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Vendor.City" class="control-label"></label>
+                            <input asp-for="Vendor.City" class="form-control" />
+                            <span asp-validation-for="Vendor.City" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Vendor.Province" class="control-label"></label>
+                            <input asp-for="Vendor.Province" class="form-control" />
+                            <span asp-validation-for="Vendor.Province" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Vendor.Postcode" class="control-label"></label>
+                            <input asp-for="Vendor.Postcode" class="form-control" />
+                            <span asp-validation-for="Vendor.Postcode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Vendor.Country" class="control-label"></label>
+                            <select asp-for="Vendor.Country" class="form-control" asp-items="new SelectList(B2S.Core.Utilities.CommonHelper.CountryList())">
+                                <option value="">-Select-</option>
+                            </select>
+                            <span asp-validation-for="Vendor.Country" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="agent" name="type-1" class="dynamic-type">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Agent.BusinessName" class="control-label"></label>
+                            <input asp-for="Agent.BusinessName" class="form-control" />
+                            <span asp-validation-for="Agent.BusinessName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Agent.LegalName" class="control-label"></label>
+                            <input asp-for="Agent.LegalName" class="form-control" />
+                            <span asp-validation-for="Agent.LegalName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Agent.BusinessNumber" class="control-label"></label>
+                            <input asp-for="Agent.BusinessNumber" class="form-control" />
+                            <span asp-validation-for="Agent.BusinessNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Agent.ContactName" class="control-label"></label>
+                            <input asp-for="Agent.ContactName" class="form-control" />
+                            <span asp-validation-for="Agent.ContactName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Agent.Phone" class="control-label"></label>
+                            <input asp-for="Agent.Phone" class="form-control" />
+                            <span asp-validation-for="Agent.Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Agent.Fax" class="control-label"></label>
+                            <input asp-for="Agent.Fax" class="form-control" />
+                            <span asp-validation-for="Agent.Fax" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group-2">
+                            <label asp-for="Agent.Email" class="control-label"></label>
+                            <input asp-for="Agent.Email" class="form-control" />
+                            <span asp-validation-for="Agent.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group-2">
+                            <label asp-for="Agent.Address" class="control-label"></label>
+                            <textarea asp-for="Agent.Address" class="form-control"></textarea>
+                            <span asp-validation-for="Agent.Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Agent.City" class="control-label"></label>
+                            <input asp-for="Agent.City" class="form-control" />
+                            <span asp-validation-for="Agent.City" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Agent.Province" class="control-label"></label>
+                            <input asp-for="Agent.Province" class="form-control" />
+                            <span asp-validation-for="Agent.Province" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Agent.Postcode" class="control-label"></label>
+                            <input asp-for="Agent.Postcode" class="form-control" />
+                            <span asp-validation-for="Agent.Postcode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Agent.Country" class="control-label"></label>
+                            <select asp-for="Agent.Country" class="form-control" asp-items="new SelectList(B2S.Core.Utilities.CommonHelper.CountryList())">
+                                <option value="">-Select-</option>
+                            </select>
+                            <span asp-validation-for="Agent.Country" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script src="~/adminlte/components/colorlib-wizard-20/vendor/jquery-steps/jquery.steps.min.js"></script>
+    <script src="~/adminlte/components/colorlib-wizard-20/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/adminlte/components/colorlib-wizard-20/vendor/jquery-validation/dist/additional-methods.min.js"></script>
+    <script src="~/adminlte/components/colorlib-wizard-20/js/main.js"></script>
+}

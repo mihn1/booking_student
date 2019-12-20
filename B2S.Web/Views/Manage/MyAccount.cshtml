@@ -1,0 +1,160 @@
+﻿@model B2S.Web.ViewModels.Manage.MyAccountViewModel
+@using Microsoft.EntityFrameworkCore
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@inject B2S.Infrastructure.Data.AppDbContext Context
+
+@{
+    ViewData["Title"] = "My Account";
+    Layout = "_B2S";
+    User appUser = await UserManager.GetUserAsync(User);
+    string accountId = (await Context.UserAccount.FirstOrDefaultAsync(a => a.UserId == appUser.Id))?.AccountId;
+    object account = new object();
+    Vendor vendor = null;
+    Agent agent = null;
+    Customer customer = null;
+    @if (appUser.UserType == B2S.Core.Enums.UserType.Vendor)
+    {
+        vendor = await Context.Vendor.FirstOrDefaultAsync(c => c.VendorId == accountId);
+    }
+    else if (appUser.UserType == B2S.Core.Enums.UserType.Agent)
+    {
+        agent = await Context.Agent.FirstOrDefaultAsync(c => c.AgentId == accountId);
+    }
+    else if (appUser.UserType == B2S.Core.Enums.UserType.Customer)
+    {
+        customer = await Context.Customer.FirstOrDefaultAsync(c => c.CustomerId == accountId);
+    }
+  
+}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                User Profile
+            </h1>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-3">
+                    @if (appUser != null)
+                    {
+
+                        <!-- Profile Image -->
+                        <div class="box box-primary">
+                            <div class="box-body box-profile">
+                                <img class="profile-user-img img-responsive img-circle" src="@appUser.ProfilePictureUrl" alt="User profile picture">
+
+                                <h3 class="profile-username text-center">@appUser.FirstName  @appUser.LastName</h3>
+                                <p class="text-muted text-center">@appUser.UserType.ToString()</p>
+                                <ul class="list-group list-group-unbordered">
+                                    @if (appUser.UserType == B2S.Core.Enums.UserType.Vendor && vendor != null)
+                                    {
+                                    <li class="list-group-item">
+                                        <b>Location:</b> <span>@vendor.City - @vendor.Province</span>
+                                    </li>
+                                    }
+                                    else if (appUser.UserType == B2S.Core.Enums.UserType.Agent && agent != null)
+                                    {
+                                        <li class="list-group-item">
+                                            <b>Business Name:</b> <span>@agent.BusinessName</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>ABN:</b> <span>@agent.BusinessNumber</span>
+                                        </li>
+                                    }
+                                    else if (appUser.UserType == B2S.Core.Enums.UserType.Customer && customer != null)
+                                    {
+                                        <li class="list-group-item">
+                                            <b>Country:</b> <span>@customer.Country</span>
+                                        </li>                                       
+                                    }
+
+                                </ul>
+                                <a href="@Url.Action("ChangeProfilePicture", "Manage")" class="btn btn-primary btn-block">
+                                    <i class="fa fa-picture-o">
+
+                                    </i>
+                                    <span> Change Picture</span>
+                                </a>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+                    }
+
+
+                </div>
+                <!-- /.col -->
+                <div class="col-md-9">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#password" data-toggle="tab">Password</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="password">
+                                @await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form method="post" asp-action="ChangePassword" asp-controller="Manage">
+                                            <div class="form-group">
+                                                <label asp-for="OldPassword"></label>
+                                                <input asp-for="OldPassword" class="form-control" />
+                                                <span asp-validation-for="OldPassword" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="NewPassword"></label>
+                                                <input asp-for="NewPassword" class="form-control" />
+                                                <span asp-validation-for="NewPassword" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="ConfirmPassword"></label>
+                                                <input asp-for="ConfirmPassword" class="form-control" />
+                                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Update password</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.tab-content -->
+                    </div>
+                    <!-- /.nav-tabs-custom -->
+                    @if (appUser.UserType == B2S.Core.Enums.UserType.Agent && agent != null)
+                    {
+                        @await Html.PartialAsync("_AgentPanel", agent)
+                    }
+                    else if (appUser.UserType == B2S.Core.Enums.UserType.Customer && customer != null)
+                    {
+                        @await Html.PartialAsync("_CustomerPanel", customer)
+                    }
+                    else if (appUser.UserType == B2S.Core.Enums.UserType.Vendor && vendor != null)
+                    {
+                        @await Html.PartialAsync("_VendorPanel", vendor)
+                    }
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+
+
+    @section Styles{
+
+    }
+
+
+    @section Scripts{
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+

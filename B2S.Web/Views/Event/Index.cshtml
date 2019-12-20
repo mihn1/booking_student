@@ -1,0 +1,198 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_B2S.cshtml";
+}
+
+<!-- Content Wrapper. Contains page content -->
+@section Styles{
+
+    <!-- fullCalendar -->
+    <link rel="stylesheet" href="~/adminlte/components/fullcalendar/dist/fullcalendar.min.css">
+    <link rel="stylesheet" href="~/adminlte/components/fullcalendar/dist/fullcalendar.print.min.css" media="print">
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Upcomming Events
+        </h1>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-body no-padding">
+                        <!-- THE CALENDAR -->
+                        <div id="calendar"></div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /. box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<!--modal placeholder-->
+<div class="modal modal-primary fade" id="modalDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <!-- fullCalendar -->
+    <script src="~/adminlte/components/moment/moment.js"></script>
+    <script src="~/adminlte/components/fullcalendar/dist/fullcalendar.min.js"></script>
+    <!-- Page specific script -->
+    <script>
+        var popup
+        $(function () {
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+
+
+            /* initialize the calendar
+             -----------------------------------------------------------------*/
+            //Date for the calendar events (dummy data)
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                buttonText: {
+                    today: 'today',
+                    month: 'month',
+                    week: 'week',
+                    day: 'day'
+                },
+                events: function (start, end, timezone, callback) {
+                    $.ajax({
+                        url: '/Event/GetEvent',
+                        type: "GET",
+                        dataType: "JSON",
+                        success: function (response) {
+                            let events = [];
+                            $.each(response, function (i, data) {
+                                events.push(
+                                    {
+                                        bookingId: data.bookingId,
+                                        eventType: data.eventType,
+                                        title: data.title,
+                                        start: moment(data.startDate).format('YYYY-MM-DD'),
+                                        end: moment(data.endDate).format('YYYY-MM-DD'),
+                                        backgroundColor: data.backgroundColor,
+                                        borderColor: data.borderColor
+                                    });
+                            });
+                            callback(events);
+                        }
+                    });
+                },
+                //eventRender: function (event, element) {
+                //    console.log(event);
+                //    console.log(element);
+                //},
+                eventClick: function (event) {
+                    let url = '/Event/Details';
+                    let modalId = 'modalDefault';
+                    let modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+                    $.get(url, { id: event.bookingId, eventType: event.eventType })
+                        .done(function (response) {
+                            modalPlaceholder.html(response);
+                            popup = $('#' + modalId + '').modal({
+                                keyboard: false,
+                                backdrop: 'static'
+                            });
+                    })
+                },
+                editable: false
+            });
+
+        })
+
+        function CheckIn() {        
+            let url = '/Event/CheckIn'
+            let isConfirmOA = $('#isConfirmOA').prop('checked');
+            if (!isConfirmOA) {
+                ShowMessageError('You need to confirm the Occupancy Agreement to check in this booking.');
+                return;
+            }
+            let isSendLetter = $('#isSendLetter').prop('checked');
+            let bookingId = $('#bookingId').val();
+            let data = { bookingId, isConfirmOA, isSendLetter };     
+            ShowMessage('Processing...')
+            $.ajax({
+                type: 'Post',
+                url: url,
+                data: data,
+                traditional: true,
+                cache: false,
+                success: function (data) {
+                    if (data.success) {
+                        popup.modal('hide');
+                        ShowMessage(data.message);
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1500)
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            })          
+      
+        }
+
+        function CheckOut() {
+            let url = '/Event/CheckOut'           
+            let isReportDamage = $('#isReportDamage').prop('checked');
+            let bookingId = $('#bookingId').val();
+            let data = { bookingId, isReportDamage };
+            ShowMessage('Processing...')
+            $.ajax({
+                type: 'Post',
+                url: url,
+                data: data,
+                traditional: true,
+                cache: false,
+                success: function (data) {
+                    if (data.success) {
+                        if (isReportDamage) {
+                            ShowMessage(data.message);
+                            setTimeout(function () {
+                                window.location.href = data.redirectUrl;
+                            }, 1500)
+                        } else {
+                            popup.modal('hide');
+                            ShowMessage(data.message);
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1500)
+                        }
+                       
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            })
+
+        }
+
+    </script>
+}
+
+
+

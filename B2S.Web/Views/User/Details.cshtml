@@ -1,0 +1,109 @@
+﻿@model B2S.Core.Entities.User
+@{
+    ViewData["Title"] = "User Account Details";
+    ViewData["Name"] = "User Account";
+    Layout = "~/Views/Shared/_B2SDetails.cshtml";
+    ViewData["EntityIcon"] = "fa fa-user";
+}
+
+
+
+<div class="row">
+    <div class="col-md-9">
+        <!-- Default box -->
+        <div class="box box-primary">
+            <div class="box-body">
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.UserType)
+                        </dt>
+                        <dd>
+                            @Model.UserType.ToString()
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Email)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("User Name")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.UserName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.FirstName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.LastName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.LastName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Phone Number")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.PhoneNumber)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Is Super Admin")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.IsSuperAdmin)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Email Confirmed")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.EmailConfirmed)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Phone Confirmed")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.PhoneNumberConfirmed)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Two Factor Enabled")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.TwoFactorEnabled)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Lockout Enabled")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.LockoutEnabled)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("User Profile")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.UserProfile.UserProfileName)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="form-group">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                    <a asp-action="Index" class="btn btn-default">Back to List</a>
+                </div>
+            </div>
+            <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+
+
+

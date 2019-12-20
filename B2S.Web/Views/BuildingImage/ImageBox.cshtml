@@ -1,0 +1,49 @@
+﻿@model B2S.Core.Entities.BuildingImage
+@{
+    if (ViewBag.IsInit)
+    {
+        Layout = "~/Views/Shared/_B2SImagePopup.cshtml";
+    }
+    else
+    {
+        Layout = null;
+    }
+}
+
+    <div class="box-header">
+        <div class="box-tools pull-left">
+            <button type="button" onclick="PrevImage('@Model.ImageId')" class="btn btn-success btn-sm">
+                <i class="fa fa-arrow-circle-left"></i>
+            </button>
+            <button type="button" onclick="NxtImage('@Model.ImageId')" class="btn btn-success btn-sm">
+                <i class="fa fa-arrow-circle-right"></i>
+            </button>
+        </div>
+        <span>image @ViewData["CurIndex"] of @ViewData["TotalImgs"]</span>
+    </div>
+    <div class="box-body">
+        <img src="@Url.Action("GetImage", "BuildingImage", new { id = Model.ImageId })" />
+    </div>
+
+
+@section Scripts {
+    <script>
+            var url = '/BuildingImage/ImageBox/';
+        function PrevImage(id) {
+            $.get(url, { curImgId: id, move: 'Prev'}, function (res) {
+            $("#imageBox").html(res);
+            })
+
+            }
+
+        function NxtImage(id) {
+            $.get(url, { curImgId: id, move: 'Nxt'}, function (res) {
+            $("#imageBox").html(res);
+            })
+
+            }
+    </script>
+}
+
+
+

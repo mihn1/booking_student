@@ -1,0 +1,65 @@
+﻿@model IEnumerable<B2S.Core.Entities.User>
+
+@{
+    ViewData["Title"] = "User Accounts";
+    Layout = "~/Views/Shared/_B2SIndex.cshtml";
+    ViewData["EntityIcon"] = "fa fa-user";
+    ViewData["Name"] = "User Account";
+    ViewData["IndexInfo"] = "This is used to maintain the User Account.";
+}
+
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserType)
+            </th>
+            <th>
+                @Html.DisplayName("User Profile")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <div class="tools" style="width:100px">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-xs"><i class="fa fa-list"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                </div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @item.UserType.ToString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserProfile.UserProfileName)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+

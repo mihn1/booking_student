@@ -1,0 +1,287 @@
+﻿@model B2S.Core.Entities.Booking
+
+@{
+    ViewData["Title"] = "Payment Details";
+    ViewData["Name"] = "Payment";
+    Layout = "~/Views/Shared/_B2SDetails.cshtml";
+    ViewData["EntityIcon"] = "fa fa-product-hunt";
+    string idType = Model.IDType == 0 ? "" : Model.IDType.ToString() + " - " + Model.IDNumber;
+}
+
+
+
+<div class="row">
+    <div class="col-md-9">
+        <!-- Default box -->
+        <div class="box box-primary">
+            <div class="box-body">
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayName("Name")
+
+                        </dt>
+                        <dd>
+                            @Model.FirstName @Model.LastName
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Nationality)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Nationality)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Gender)
+                        </dt>
+                        <dd>
+                            @Model.Gender.ToString()
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.IDNumber)
+                        </dt>
+                        <dd>
+                            @idType
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Phone)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Phone)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Email)
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Booking")
+                        </dt>
+                        <dd>
+                            From @Model.BookingFrom.ToShortDateString() To @Model.BookingTo.ToShortDateString()
+                        </dd>
+                        <dt>
+                            @Html.DisplayName("Property Name")
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Bed.Room.Property.PropertyName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Bed.Room.RoomName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Bed.Room.RoomName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Bed.Room.RoomType)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Bed.Room.RoomType.RoomTypeName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Bed)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Bed.Name)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Price)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Price)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.DepositAmount)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.DepositAmount)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.DiscountAmount)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.DiscountAmount)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="form-group">
+                    @*<a asp-action="Edit" asp-route-id="@ViewData["PaymentId"]" class="btn btn-primary">Edit</a>*@
+                    <a asp-action="Index" asp-route-id="@ViewData["PaymentId"]" class="btn btn-default">Back to List</a>
+                </div>
+            </div>
+            <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-9">
+        <!-- Default box -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Properties</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="grid-payment" name="grid-payment" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-4">Payment Date</th>
+                                    <th class="col-md-3">Description</th>
+                                    <th class="col-md-4">Amount</th>
+                                    <th class="col-md-1"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a class="btn btn-success" style="margin-bottom:10px" onclick="ShowPopup('@Url.Action("Create","Payment", new { bookingId = Model.BookingId })')"><i class="fa fa-plus"></i> Add Payment</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+<!--modal placeholder-->
+<div class="modal modal-primary fade" id="modalDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var popup, dataTable
+        var entity = 'Payment';
+        var apiurl = '/api/' + entity;
+
+        $(document).ready(function () {
+            dataTable = $('#grid-payment').DataTable({
+                "ajax": {
+                    "url": apiurl + '?bookingId=@Model.BookingId',
+                    "type": 'GET',
+                    "datatype": 'json'
+                },
+                "columns": [
+                    { "data": "paymentDate" },
+                    { "data": "description" },
+                    { "data": "amount"},
+                    {
+                        "data": "paymentId",
+                        "render": function (data) {
+                            let btnEdit = "<a class='btn btn-primary btn-xs' onclick=ShowPopup('/" + entity + "/Create/" + data + "')><i class='fa fa-pencil'></i></a>";
+                            let btnDelete = "<a class='btn btn-danger btn-xs' style='margin-left:2px' onclick=Delete('/api/" + entity + "/" + data + "')><i class='fa fa-trash'></i></a>";
+                            return "<div class='tools pull-right'>" + btnEdit + btnDelete + "</div>";
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No data found."
+                },
+                "lengthChange": false,
+                "info": false,
+                "searching": false,
+                "paging": false,
+                "columnDefs": [{
+                    "targets": 3,
+                    "orderable": false
+                }]
+            });
+        })
+
+         function ShowPopup(url) {
+            var modalId = 'modalDefault';
+            var modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+            $.get(url)
+                .done(function (response) {
+                    modalPlaceholder.html(response);
+                    popup = $('#' + modalId + '').modal({
+                        keyboard: false,
+                        backdrop: 'static'
+                    });
+                });
+        }
+
+          function SubmitAddEdit(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                //need this because of auto generated hidden input for checkbox in asp.net core
+                var checkedboxes = $(form).find("input[type='checkbox']:checked");
+                checkedboxes.each(function () {
+                    let name = $(this).attr("name");
+                    $("input[type='hidden'][name='" + name + "']").val('true');
+                })
+                var replacer = function (key, value) { if (value === undefined || value === '') { return null; } return value; };
+                var data = $(form).serializeJSON();
+                data = JSON.stringify(data, replacer);
+                $.ajax({
+                    type: 'POST',
+                    url: apiurl,
+                    data: data,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.success) {
+                            popup.modal('hide');
+                            ShowMessage(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+
+        function Delete(url) {
+            swal({
+                title: "Are you sure want to Delete?",
+                text: "You will not be able to restore the data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            ShowMessage(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+    </script>
+}

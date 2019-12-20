@@ -1,0 +1,90 @@
+﻿@model B2S.Core.Entities.Expense
+
+@{
+    ViewData["Title"] = "Edit Expense";
+    ViewData["Name"] = "Expense";
+    Layout = "~/Views/Shared/_B2SEdit.cshtml";
+    ViewData["EntityIcon"] = "fa fa-usd";
+    ViewData["CreateInfo"] = "";
+    bool isVendor = ViewBag.IsVendor ?? false;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="ExpenseId" />
+        <input type="hidden" asp-for="Receipt" />
+        <input type="hidden" asp-for="FileName" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <input type="hidden" asp-for="CreatedBy" />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="CategoryId" class="control-label"></label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
+                        <option value="">-Select</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ExpenseDate" class="control-label"></label>
+                    <input asp-for="ExpenseDate" value="@Model.ExpenseDate.ToShortDateString()" type="text" class="form-control datepicker" />
+                    <span asp-validation-for="ExpenseDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Reference" class="control-label"></label>
+                    <input asp-for="Reference" class="form-control" />
+                    <span asp-validation-for="Reference" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @if (!isVendor)
+            {
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="VendorId" class="control-label"></label>
+                        <select asp-for="VendorId" class="form-control select2" asp-items="ViewBag.VendorId">
+                            <option value="">-Select</option>
+                        </select>
+                        <span asp-validation-for="VendorId" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <input type="hidden" asp-for="VendorId" />
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+

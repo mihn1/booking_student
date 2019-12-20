@@ -1,0 +1,59 @@
+﻿@model B2S.Core.Entities.Expense
+
+@{
+    ViewData["Title"] = "Delete Expense";
+    ViewData["Name"] = "Expense";
+    Layout = "~/Views/Shared/_B2SDelete.cshtml";
+    ViewData["EntityIcon"] = "fa fa-usd";
+    ViewData["DeleteInfo"] = "You don't have permission to delete the Expense.";
+    ViewData["IsCanDeleted"] = false;
+
+}
+
+
+@await Html.PartialAsync("_StatusMessage", (string)ViewBag.StatusMessage)
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.CategoryName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Category.CategoryName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpenseDate)
+        </dt>
+        <dd>
+            @Model.ExpenseDate.ToShortDateString()
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+        <dd>
+            @Model.Amount.ToString("#,##0.00")
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Reference)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Reference)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Receipt)
+        </dt>
+        <dd>
+            <a class="btn btn-primary btn-xs" href="@Url.Action("GetReceipt", "Expense", new { id = Model.ExpenseId })" target="_blank">
+                <i class="fa fa-file-text-o" title="Receipt"></i>
+            </a>
+        </dd>
+
+    </dl>
+
+</div>

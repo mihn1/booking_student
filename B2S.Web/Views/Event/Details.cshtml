@@ -1,0 +1,138 @@
+﻿@model B2S.Core.Entities.Booking
+
+@{
+    Layout = null;
+    string IDType = Model.IDType == 0 ? "" : Model.IDType.ToString();
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Booking Details - @ViewData["EventType"]</h4>
+</div>
+<div class="box-body">
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                Name
+            </dt>
+            <dd>
+                @Model.FirstName @Model.LastName
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.BookingFrom)
+            </dt>
+            <dd>
+                @Model.BookingFrom.ToShortDateString()
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.BookingTo)
+            </dt>
+            <dd>
+                @Model.BookingTo.ToShortDateString()
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Gender)
+            </dt>
+            <dd>
+                @Model.Gender.ToString()
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.IDType)
+            </dt>
+            <dd>
+                @IDType
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.IDNumber)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IDNumber)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Bed.Room.RoomName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Bed.Room.RoomName)
+            </dd>
+            <dt>
+                Room Type
+            </dt>
+            <dd>
+                @Model.Bed.Room.RoomType?.RoomTypeName
+            </dd>
+            <dt>
+                Bed Number
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Bed.Name)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="row">
+        <div class="col-md-11 pull-right">
+            @if (ViewBag.IsCheckIn ?? false)
+            {
+                <input type="hidden" id="bookingId" value="@Model.BookingId" />
+                <div class="row">
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="isConfirmOA" /> I have advised student that he/she will need to sign the Occupancy Agreement.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" checked id="isSendLetter" /> Sent welcome letter and other documents to student's email.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            @if (ViewBag.IsCheckOut ?? false)
+            {
+                <input type="hidden" id="bookingId" value="@Model.BookingId" />
+                <div class="row">
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" checked id="isReportDamage" /> Report a damage.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+   
+
+</div>
+
+<div class="box-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    @if (ViewBag.IsCheckIn ?? false)
+    {
+        <button type="button" class="btn btn-success pull-right" onclick="CheckIn()">Check-in</button>
+    }
+    @if (ViewBag.IsCheckOut ?? false)
+    {
+        <button type="button" class="btn btn-primary pull-right" onclick="CheckOut()">Check-out</button>
+    }
+</div>
+
+
+
+
+

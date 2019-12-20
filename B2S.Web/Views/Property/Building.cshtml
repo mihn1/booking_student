@@ -1,0 +1,278 @@
+﻿@model IEnumerable<B2S.Core.Entities.Building>
+@inject B2S.Infrastructure.Data.AppDbContext _context
+
+@{
+    ViewData["Title"] = "Building";
+    Layout = "~/Views/Shared/_B2S.cshtml";
+    ViewData["CreateInfo"] = "";
+    ViewData["Name"] = "Building";
+    ViewData["EntityIcon"] = "fa fa-ils";
+}
+
+@section Styles {
+    <link href="~/css/PropertyWizard.css" rel="stylesheet" />
+    <!--blueimp file upload-->
+    <link rel="stylesheet" href="~/lib/jQuery-File-Upload-9.21.0/css/jquery.fileupload.css" />
+    <style>
+        td img {
+            width: 100%;
+            max-height: 300px;
+            /*max-width: 300px;
+            max-height: 200px;*/
+            cursor: pointer;
+        }
+    </style>
+}
+
+
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="wizard-steps">
+                    <div class="step ">
+                        <span class="badge">1</span>  Property
+                    </div>
+                    <div class="step active">
+                        <span class="badge">2</span>  <b>Buildings</b>
+                    </div>
+                    <div class="step">
+                        <span class="badge">3</span>  Rooms / Beds
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="text-primary"></i> <span>Buildings</span></h3>
+                    </div>
+                    <div class="box-body box-info">
+
+                        <div class="table-responsive">
+                            <table id="grid" name="grid" class="table table-hover table-striped" data-so>
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-3">
+                                            @Html.DisplayNameFor(model => model.Name)
+                                        </th>
+                                        <th class="col-md-8">
+                                            @Html.DisplayNameFor(model => model.Description)
+                                        </th>
+                                        <th class="col-md-1"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td>
+                                                <div class="tools pull-right">
+                                                    <a onclick="ShowPopup('@Url.Action("AddBuilding","Property", new { id = item.BuildingId })')" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                    <a onclick="Delete('@Url.Action("DelBuilding","Property", new { id = item.BuildingId })')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            <!-- /.table -->
+                        </div>
+                        <!-- /.mail-box-messages -->
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a class="btn btn-success" id="btnAdd" style="margin-bottom:10px" onclick="ShowPopup('@Url.Action("AddBuilding","Property", new { propertyId = ViewData["PropertyId"] })')"><i class="fa fa-plus"></i> Add Building</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-sm-offset-5">
+                        <a asp-action="Create" asp-route-id="@ViewData["PropertyId"]" class="btn btn-default">Previous</a>
+                        <a href="@Url.Action("Room","Property", new { propertyId = ViewData["PropertyId"] })" class="btn btn-primary">Next</a>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="col-md-3">
+                <div class="callout callout-info" style="margin-bottom: 0!important;">
+                    <h4><i class="fa fa-info"></i> Info:</h4>
+                    <p>
+                        @ViewBag.CreateInfo
+                    </p>
+                </div>
+            </div>*@
+        </div>
+    </section>
+</div>
+
+<!--modal placeholder-->
+<div class="modal modal-primary fade" id="modalDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var popup;
+        $(document).ready(function () {
+
+        });
+
+        function ShowPopup(url) {
+            var modalId = 'modalDefault';
+            var modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+            $.get(url)
+                .done(function (response) {
+                    modalPlaceholder.html(response);
+                    popup = $('#' + modalId + '').modal({
+                        keyboard: false,
+                        backdrop: 'static'
+                    });
+                });
+        }
+
+
+        function SubmitAddEdit(form) {
+            $.validator.unobtrusive.parse(form);
+            let formData = new FormData(form);
+            let url = '/Property/AddBuilding'
+            $.ajax({
+                url: url,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    if (data.success) {
+                        popup.modal('hide');
+                        ShowMessage(data.message);
+                        window.location.reload();
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            });          
+            return false;
+        }
+
+        function triggerUpload(files, buildingId) {
+            let url = '/api/BuildingImage';
+            $.each($(files)[0].files, function (index, item) {
+                let formData = new FormData();
+                formData.append('parentId', buildingId);
+                formData.append('formFile', item);
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    enctype: 'multipart/form-data',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    success: function (data) {
+                        if (data.success) {
+                            ShowMessage(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+      
+        function Delete(url) {
+            swal({
+                title: "Are you sure want to Delete?",
+                text: "You will not be able to restore the data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            ShowMessage(data.message);
+                            window.location.reload()
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        function DeleteImg(url) {
+            swal({
+                title: "Are you sure want to Delete?",
+                text: "You will not be able to restore the data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            ShowMessage(data.message);
+                            dataTable.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        $(document).on('click', 'input[name=isDefault]', function (e) {
+            let url = '/BuildingImage/UpdateBuildingImage';
+            let curState = $(this).is(':checked');
+            let data = { id: $(this).attr('id'), isDefault: curState };
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                traditional: true,
+                cache: true,
+                success: function (data) {
+                    if (data.success) {
+                        ShowMessage(data.message)
+                    } else {
+                        ShowMessageError(data.message)
+                        $(this).prop(!curState);
+                    }
+                }
+            })
+        })
+
+
+    </script>
+}
+

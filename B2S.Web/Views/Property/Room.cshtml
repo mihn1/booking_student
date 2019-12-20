@@ -1,0 +1,279 @@
+﻿@model IEnumerable<B2S.Core.Entities.Building>
+@using Microsoft.EntityFrameworkCore
+@inject B2S.Infrastructure.Data.AppDbContext _context
+
+@{
+    ViewData["Title"] = "Room";
+    Layout = "~/Views/Shared/_B2S.cshtml";
+    ViewData["CreateInfo"] = "";
+    ViewData["Name"] = "Room";
+    ViewData["EntityIcon"] = "";
+}
+
+@section Styles {
+    <link href="~/css/PropertyWizard.css" rel="stylesheet" />
+}
+
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="wizard-steps">
+                    <div class="step ">
+                        <span class="badge">1</span>  Property
+                    </div>
+                    <div class="step">
+                        <span class="badge">2</span>  Buildings
+                    </div>
+                    <div class="step active">
+                        <span class="badge">3</span>  <b>Rooms / Beds</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-9">
+                @{
+                    foreach (var building in Model)
+                    {
+                        var rooms = _context.Room.Include(r => r.RoomType).OrderBy(r => r.RoomName).Where(r => r.BuildingId == building.BuildingId);
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="text-primary"></i> <span>@building.Name</span></h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+
+                                <div class="table-responsive mailbox-messages">
+                                    <table id="grid-room" name="grid-room" class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Room Name
+                                                </th>
+                                                <th>
+                                                    Room Type
+                                                </th>
+                                                <th>
+                                                    Description
+                                                </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in rooms)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.RoomName)
+                                                    </td>
+                                                    <td>
+                                                        @item.RoomType?.RoomTypeName
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Description)
+                                                    </td>
+                                                    <td>
+                                                        <div class="tools pull-right">
+                                                            <a onclick="ShowPopup('@Url.Action("AddRoom","Property", new { id = item.RoomId })')" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                            <a onclick="Delete('@Url.Action("DelRoom", new { id = item.RoomId })')" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                                                            <a onclick="ShowPopup('@Url.Action("ManageBed","Property", new { roomId = item.RoomId })')" class="btn btn-primary btn-xs"><i class="fa fa-check"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                    <!-- /.table -->
+                                </div>
+                                <!-- /.mail-box-messages -->
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a class="btn btn-success" style="margin-bottom:10px" onclick="ShowPopup('@Url.Action("AddRoom","Property", new { buildingId = building.BuildingId})')"><i class="fa fa-plus"></i> Add Room</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="row">
+                    <div class="col-sm-3 col-sm-offset-5">
+                        <a href="@Url.Action("Building","Property", new { propertyId = ViewBag.PropertyId})" class="btn btn-default">Previous</a>
+                        <a asp-action="Index" class="btn btn-primary">Finish</a>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="col-md-3">
+                <div class="callout callout-info" style="margin-bottom: 0!important;">
+                    <h4><i class="fa fa-info"></i> Info:</h4>
+                    <p>
+                        @ViewBag.CreateInfo
+                    </p>
+                </div>
+            </div>*@
+        </div>
+
+    </section>
+</div>
+
+<!--modal placeholder-->
+<div class="modal modal-primary fade" id="modalDefault">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var popup, bedDt;
+        $(document).ready(function () {
+
+        });
+
+        function ShowPopup(url) {
+            var modalId = 'modalDefault';
+            var modalPlaceholder = $('#' + modalId + ' .modal-dialog .modal-content');
+            $.get(url)
+                .done(function (response) {
+                    modalPlaceholder.html(response);
+                    popup = $('#' + modalId + '').modal({
+                        keyboard: false,
+                        backdrop: 'static'
+                    });
+                });
+        }
+
+
+        function SubmitAddEdit(form) {
+            $.validator.unobtrusive.parse(form);
+            let formData = new FormData(form);
+            let url = '/Property/AddRoom'
+            $.ajax({
+                url: url,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    if (data.success) {
+                        popup.modal('hide');
+                        ShowMessage(data.message);
+                        window.location.reload();
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            });
+            //if ($(form).valid()) {
+            //    var data = $(form).serializeJSON();
+            //    data = JSON.stringify(data);
+            //    $.ajax({
+            //        type: 'POST',
+            //        url: '/Property/AddBuilding',
+            //        data: data,
+            //        contentType: 'application/json',
+            //        success: function (data) {
+            //            if (data.success) {
+            //                popup.modal('hide');
+            //                ShowMessage(data.message);
+            //                window.location.reload();
+            //            } else {
+            //                ShowMessageError(data.message);
+            //            }
+            //        }
+            //    });
+
+            //}
+            return false;
+        }
+
+        function SubmitBed(form) {
+            let url = '/api/Bed'
+            var replacer = function (key, value) { if (value === undefined || value === '') { return null; } return value; };
+            var data = $(form).serializeJSON();
+            data = JSON.stringify(data, replacer);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data.success) {
+                        ShowMessage(data.message);
+                        bedDt.ajax.reload();
+                    } else {
+                        ShowMessageError(data.message);
+                    }
+                }
+            });
+
+            return false;
+        }
+
+        function Delete(url) {
+            swal({
+                title: "Are you sure want to Delete?",
+                text: "You will not be able to restore the data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            ShowMessage(data.message);
+                            window.location.reload()
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        function DeleteBed(url) {
+            swal({
+                title: "Are you sure want to Delete?",
+                text: "You will not be able to restore the data!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dd4b39",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function () {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    success: function (data) {
+                        if (data.success) {
+                            ShowMessage(data.message);
+                            bedDt.ajax.reload();
+                        } else {
+                            ShowMessageError(data.message);
+                        }
+                    }
+                });
+            });
+        }
+
+
+    </script>
+}
+

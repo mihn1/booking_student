@@ -1,0 +1,140 @@
+﻿@model B2S.Core.Entities.DamageReport
+
+@{
+    ViewData["Title"] = "Edit Damage Report";
+    ViewData["Name"] = "Damage Report";
+    Layout = "~/Views/Shared/_B2SEdit.cshtml";
+    ViewData["EntityIcon"] = "fa fa-newspaper-o";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="ReportId" />
+        <input type="hidden" asp-for="BookingId" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <input type="hidden" asp-for="CreatedBy" />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="ReportName" class="control-label"></label>
+                    <input asp-for="ReportName" class="form-control" />
+                    <span asp-validation-for="ReportName" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="CustomerName" class="control-label"></label>
+                    <input asp-for="CustomerName" class="form-control" />
+                    <span asp-validation-for="CustomerName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ReportPerson" class="control-label"></label>
+                    <input asp-for="ReportPerson" class="form-control" />
+                    <span asp-validation-for="ReportPerson" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="DamageType" class="control-label"></label>
+                    <select asp-for="DamageType" id="templateId" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.DamageType>()">
+                        <option value="0">-Select</option>
+                    </select>
+                    <span asp-validation-for="DamageType" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="DamageStatus" class="control-label"></label>
+                    <select asp-for="DamageStatus" id="templateId" class="form-control" asp-items="Html.GetEnumSelectList<B2S.Core.Enums.DamageStatus>()">
+                        <option value="0">-Select</option>
+                    </select>
+                    <span asp-validation-for="DamageStatus" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        @*<div class="row">
+            @if (ViewBag.IsVendor ?? false)
+            {
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="VendorId" class="control-label"></label>
+                        <select asp-for="VendorId" class="form-control select2" asp-items="ViewBag.VendorId"></select>
+                        <span asp-validation-for="VendorId" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <input type="hidden" asp-for="VendorId" />
+            }
+        </div>*@
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="PropertyId" class="control-label"></label>
+                    <select asp-for="PropertyId" class="form-control select2" asp-items="ViewBag.PropertyId">
+                        <option value="">-Select</option>
+                    </select>
+                    <span asp-validation-for="PropertyId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="IncidentDate" class="control-label"></label>
+                    <input asp-for="IncidentDate" value="@DateTime.Today.ToShortDateString()" type="text" class="form-control datepicker" />
+                    <span asp-validation-for="IncidentDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="EstimateRepairCost" class="control-label"></label>
+                    <input asp-for="EstimateRepairCost" class="form-control" />
+                    <span asp-validation-for="EstimateRepairCost" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="ActualRepairCost" class="control-label"></label>
+                <input asp-for="ActualRepairCost" class="form-control" />
+                <span asp-validation-for="ActualRepairCost" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label asp-for="Comments" class="control-label"></label>
+                    <textarea asp-for="Comments" class="form-control"></textarea>
+                    <span asp-validation-for="Comments" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
