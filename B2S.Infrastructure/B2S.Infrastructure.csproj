@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="iTextSharp" Version="5.5.13.1" />
-    <PackageReference Include="MailKit" Version="2.3.2" />
+    <PackageReference Include="MailKit" Version="4.16.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
